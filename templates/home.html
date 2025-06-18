@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>خدماتي - الصفحة الرئيسية</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #e9efff, #f9f9f9);
+    
+      direction: rtl;
+    }
+
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .container {
+      padding: 20px 15px;
+    }
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .card-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: #333;
+      background: white;
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .card-link:hover {
+      background-color: #f1f5ff;
+      transform: scale(1.02);
+    }
+
+    .card-link i {
+      font-size: 20px;
+      margin-left: 12px;
+      min-width: 26px;
+      text-align: center;
+    }
+
+    .card-link span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    /* تخصيص ألوان الأيقونات */
+    .fa-search     { color: #007bff; }
+    .fa-user       { color: #17a2b8; }
+    .fa-users      { color: #28a745; }
+    .fa-user-plus  { color: #ffc107; }
+    .fa-comments   { color: #6f42c1; }
+    .fa-sign-out-alt, .fa-user-check { color: #dc3545; }
+
+    .notification-badge {
+      background-color: #dc3545;
+      color: white;
+      border-radius: 50%;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-right: 8px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+        padding: 12px;
+      }
+    }
+    /* ✅ حاوية الشريط */
+#progress-bar-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: #eee;
+  z-index: 9999;
+}
+
+/* ✅ الشريط نفسه */
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #3498db;
+  transition: width 0.3s ease;
+}
+  
+
+  .flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 320px;
+  }
+
+  .flash-messages .alert {
+    padding: 12px 18px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+
+    
+
+  /* ✅ تصميم الشريط */
+  #preloader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  #preloader img {
+    width: 100px;
+    animation: rotate 1.5s linear infinite;
+  }
+  <div class="spinner"></div>
+
+
+.spinner {
+  margin-top: 20px;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ccc;
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+  #preloader p {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #444;
+    font-family: Arial;
+  }
+
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+   100% { transform: rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+<div class="header">خدماتي</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+  <!-- ✅ شريط التحميل --><div id="preloader">
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="شعار الموقع">
+  <div id="progress-bar-container">
+    <div id="progress-bar"></div>
+  </div>
+</div>
+
+  <div class="card-list">
+
+    {% if session.get('role') in ['admin'] %}
+      <a href="{{ url_for('admin_panel') }}" class="card-link">
+        <span><i class="fas fa-tools" style="color: #343a40;"></i> لوحة الإدارة</span>
+      </a>
+    {% endif %}
+
+    {% if session.get('role') in ['admin', 'editor'] %}
+      <a href="#" class="card-link" onclick="event.preventDefault(); document.getElementById('update-availability-form').submit();">
+        <span>
+          <i class="fas fa-ban" style="color: #dc3545;"></i> تحديث توفر المستخدمين
+        </span>
+      </a>
+      <form id="update-availability-form" method="POST" action="{{ url_for('update_availability') }}" style="display: none;"></form>
+    {% endif %}
+
+{% if session.get('role') in ['admin', 'editor'] %}
+  <a href="{{ url_for('admin_upgrade_requests') }}" class="card-link" id="upgrade-link">
+    <span>
+      <i class="fas fa-arrow-up" style="color: #28a745;"></i> طلبات الترقية
+    </span>
+    {% if new_requests_count %}
+      <span class="notification-badge" id="upgrade-badge">{{ new_requests_count }}</span>
+    {% endif %}
+  </a>
+{% endif %}
+
+
+
+{% if session.get('role') in ['admin', 'editor'] %}
+  <a href="{{ url_for('reported_ratings') }}" class="card-link">
+    <span>
+      <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> التقييمات المُبلّغ عنها
+    </span>
+    {% if reported_count %}
+      <span class="notification-badge">{{ reported_count }}</span>
+    {% endif %}
+  </a>
+{% endif %}
+
+    {% if session.get('role') in ['admin'] %}
+      <a href="{{ url_for('admin_codes') }}" class="card-link">
+        <span>
+          <i class="fas fa-key" style="color: #fd7e14;"></i> أكواد الترقية
+        </span>
+      </a>
+    {% endif %}
+
+    {% if session.get('role') in ['admin'] %}
+      <a href="{{ url_for('manage_roles') }}" class="card-link" title="إدارة الصلاحيات">
+        <span>
+          <i class="fas fa-user-shield" style="color: #6c757d;"></i> إدارة الصلاحيات
+        </span>
+      </a>
+    {% endif %}
+
+    <a href="{{ url_for('search') }}" class="card-link">
+      <span><i class="fas fa-search"></i> بحث عن العمال</span>
+    </a>
+
+    <a href="{{ url_for('search_users') }}" class="card-link">
+      <span><i class="fas fa-users" style="color:#17a2b8;"></i> البحث عن المستخدمين</span>
+    </a>
+
+    {% if session.get('phone') %}
+      <a href="{{ url_for('profile') }}" class="card-link">
+        <span><i class="fas fa-user"></i> صفحتي الشخصية</span>
+      </a>
+
+      <a href="{{ url_for('upgrade_status') }}" class="card-link">
+        <span><i class="fas fa-star" style="color:#ffc107;"></i> حالة الترقية</span>
+      </a>
+
+      <a href="{{ url_for('chatbot_page') }}" class="card-link">
+        <span>
+          <i class="fas fa-robot" style="color:#0dcaf0;"></i> التحدث مع البوت
+        </span>
+      </a>
+
+      <a href="{{ url_for('friends') }}" class="card-link">
+        <span><i class="fas fa-users"></i> الأصدقاء</span>
+      </a>
+
+      <a href="{{ url_for('friend_requests') }}" class="card-link">
+        <span>
+          <i class="fas fa-user-plus"></i> طلبات الصداقة
+        </span>
+        {% if new_friend_requests %}
+          <span class="notification-badge">{{ new_friend_requests }}</span>
+        {% endif %}
+      </a>
+
+      <a href="{{ url_for('chat.conversations') }}" class="card-link">
+        <span>
+          <i class="fas fa-comments"></i> المحادثات
+        </span>
+        {% if new_messages %}
+          <span class="notification-badge">{{ new_messages }}</span>
+        {% endif %}
+      </a>
+
+      <a href="{{ url_for('logout') }}" class="card-link">
+        <span><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</span>
+      </a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="card-link">
+        <span><i class="fas fa-user-check"></i> تسجيل الدخول</span>
+      </a>
+    {% endif %}
+  </div>
+</div>
+  <!-- أضفت هذا العنصر داخل .card-list ليحافظ على نفس التنسيق -->
+
+
+ <!-- صوت الإشعار -->
+
+<!-- ✅ شريط التقدم في الأسفل -->
+<div id="progress-bar-container">
+  <div id="progress-bar"></div>
+</div>
+
+<audio id="notification-sound" src="{{ url_for('static', filename='sounds/notification.mp3') }}" preload="auto"></audio>
+
+
+<script>
+  let audioUnlocked = false;
+  let lastFriendCount = {{ new_friend_requests or 0 }};
+  let lastMessageCount = {{ new_messages or 0 }};
+  let lastUpgradeCount = {{ new_requests_count or 0 }};
+  let lastReportedCount = {{ reported_count or 0 }};  // ✅ جديد
+
+  const audio = document.getElementById('notification-sound');
+
+  // ✅ تفعيل الصوت بعد أول نقرة
+  document.addEventListener('click', () => {
+    if (audio && !audioUnlocked) {
+      audio.play().then(() => {
+        audio.pause();
+        audioUnlocked = true;
+        console.log("✅ تم تفعيل الصوت");
+      }).catch(err => {
+        console.log("❌ لم يتم تفعيل الصوت:", err);
+      });
+    }
+  }, { once: true });
+
+  setInterval(() => {
+    fetch('/check_notifications')
+      .then(response => response.json())
+      .then(data => {
+        const friendLink = document.querySelector('a[href="{{ url_for("friend_requests") }}"]');
+        const chatLink = document.querySelector('a[href="{{ url_for("chat.conversations") }}"]');
+        const upgradeLink = document.querySelector('a[href="{{ url_for("admin_upgrade_requests") }}"]');
+        const reportLink = document.querySelector('a[href="{{ url_for("reported_ratings") }}"]');  // ✅ جديد
+
+        const currentFriendCount = data.new_friend_requests || 0;
+        const currentMessageCount = data.new_messages || 0;
+        const currentUpgradeCount = data.new_upgrade_requests || 0;
+        const currentReportedCount = data.reported_ratings_count || 0;  // ✅ جديد
+
+        if (friendLink) {
+          friendLink.innerHTML = `<span><i class="fas fa-user-plus"></i> طلبات الصداقة ${
+            currentFriendCount > 0 ? `<span class="notification-badge">${currentFriendCount}</span>` : ''
+          }</span>`;
+        }
+
+        if (chatLink) {
+          chatLink.innerHTML = `<span><i class="fas fa-comments"></i> المحادثات ${
+            currentMessageCount > 0 ? `<span class="notification-badge">${currentMessageCount}</span>` : ''
+          }</span>`;
+        }
+
+        if (upgradeLink) {
+          upgradeLink.innerHTML = `<span><i class="fas fa-arrow-up" style="color: #28a745;"></i> طلبات الترقية ${
+            currentUpgradeCount > 0 ? `<span class="notification-badge">${currentUpgradeCount}</span>` : ''
+          }</span>`;
+        }
+
+        if (reportLink) {
+          reportLink.innerHTML = `<span><i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> التقييمات المُبلّغ عنها ${
+            currentReportedCount > 0 ? `<span class="notification-badge">${currentReportedCount}</span>` : ''
+          }</span>`;
+        }
+
+        const hasNewFriendRequest = currentFriendCount > lastFriendCount;
+        const hasNewMessage = currentMessageCount > lastMessageCount;
+        const hasNewUpgrade = currentUpgradeCount > lastUpgradeCount;
+        const hasNewReport = currentReportedCount > lastReportedCount;  // ✅ جديد
+
+        if ((hasNewFriendRequest || hasNewMessage || hasNewUpgrade || hasNewReport) && audioUnlocked) {
+          audio.play().then(() => {
+            setTimeout(() => location.reload(), 1000);
+          }).catch(err => {
+            console.log("❌ فشل تشغيل الصوت:", err);
+          });
+        }
+
+        lastFriendCount = currentFriendCount;
+        lastMessageCount = currentMessageCount;
+        lastUpgradeCount = currentUpgradeCount;
+        lastReportedCount = currentReportedCount;  // ✅ جديد
+      });
+  }, 2000);
+
+  setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.transition = 'opacity 0.5s ease';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 3000);
+  <!-- ✅ سكربت إخفاء الشريط بعد تحميل الصفحة -->
+
+  window.addEventListener('load', function () {
+  setTimeout(function () {
+    document.getElementById('preloader').style.display = 'none';
+  }, 500); // نصف ثانية
+});
+</script>
+</body>
+</html>

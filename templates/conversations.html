@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>المحادثات - Zaxxy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+}
+.header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      margin-bottom : 20px;
+      
+    }
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+        padding: 12px;
+      }
+.container {
+    max-width: 480px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+h1 {
+    text-align: center;
+    color: #1c1e21;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+.conversation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    direction: rtl; /* أهم حاجة */
+}
+
+.conversation-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* يخلي الصورة والاسم على اليمين، والأيقونات على اليسار */
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.2s ease;
+}
+
+.conversation-list li:hover {
+    background-color: #f7f8fa;
+}
+
+.conversation-list a {
+    font-size: 16px;
+    text-decoration: none;
+    color: #050505;
+    font-weight: 500;
+    padding: 8px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+}
+
+.icon-links {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.conversation-list svg,
+.icon-links i {
+    width: 22px;
+    height: 22px;
+    fill: #1877f2;
+    color: #1877f2;
+    cursor: pointer;
+}
+}
+.badge {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.back-link {
+    text-align: center;
+    margin-top: 20px;
+}
+.back-link a {
+    color: #1877f2;
+    text-decoration: none;
+    font-weight: 500;
+}
+.back-link a:hover {
+    text-decoration: underline;
+}
+.home-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: white;
+    padding: 8px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: transform 0.2s ease;
+}
+.home-button:hover {
+    transform: scale(1.1);
+}
+</style>
+</head>
+<body>
+<div class="header">
+  المحادثات
+</div>
+
+<div class="container">
+  <ul class="conversation-list" id="conversation-list">
+    {% for conversation in conversations %}
+      <li style="list-style: none; padding: 0; margin-bottom: 10px; position: relative;">
+        <a href="{{ url_for('chat.chat', receiver_id=conversation['id']) }}"
+           style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; padding: 8px; border-radius: 8px; transition: background-color 0.2s;">
+          
+          <img src="{{ url_for('static', filename=conversation['profile_picture'].replace('/static/', '')) }}"
+               alt="الصورة"
+               style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+
+          <span class="friend-name">{{ conversation['name'] }}</span>
+
+          {% if conversation['unread_count'] > 0 %}
+          <span class="badge" style="position: absolute; top: 0; right: 0; background-color: red; color: white; border-radius: 10px; padding: 2px 6px; font-size: 12px;">
+            {{ conversation['unread_count'] }}
+          </span>
+          {% endif %}
+
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+  </svg>
+</a>
+
+<script>
+// صوت الإشعار
+const notificationSound = new Audio("{{ url_for('static', filename='sounds/notification.mp3') }}");
+
+// محتوى سابق
+let lastHTML = document.getElementById('conversation-list').innerHTML;
+
+// تحديث كل ثانيتين
+setInterval(() => {
+    fetch(window.location.href)
+    .then(res => res.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newList = doc.getElementById('conversation-list');
+        const currentHTML = newList.innerHTML;
+
+        if (currentHTML !== lastHTML) {
+            notificationSound.play();
+            lastHTML = currentHTML;
+        }
+
+        document.getElementById('conversation-list').innerHTML = currentHTML;
+    });
+}, 2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>التسجيل في خدماتي</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #e9efff, #f9f9f9);
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px 15px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0d47a1;
+      font-size: 22px;
+      margin-bottom: 25px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-family: 'Cairo', sans-serif;
+      color: #333;
+    }
+
+    form input,
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-family: 'Cairo', sans-serif;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16.5px;
+      box-sizing: border-box;
+    }
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      margin-bottom : 0px;
+    }
+    @media (max-width: 480px) 
+      .header {
+        font-size: 18px;
+        padding: 12px;
+      }
+    
+    
+    textarea {
+        resize: none;
+    
+    }  
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #145bd1;
+    }
+    select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 18px;
+  font-family: 'Cairo', sans-serif;
+  background-color: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%230d47a1' d='M70 90L40 60h60z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+
+select:focus {
+  border-color: #1877f2;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
+}
+optgroup {
+  font-weight: bold;
+  color: #0d47a1;
+  padding-top: 4px;
+  margin-top: 4px;
+}
+option {
+  color: #333;
+  padding: 4px 8px;
+  
+}
+
+    p {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 15px;
+      
+    }
+
+    a {
+      color: #1877f2;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) 
+      h1 {
+        font-size: 20px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">التسجيل في خدماتي
+  </div>
+  <div class="container">
+    {% if error %}
+  <div id="error-message" style="background-color: #ffe6e6; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+    {{ error }}
+  </div>
+
+
+{% endif %}
+    <form action="{{ url_for('register') }}" method="POST">
+      <label for="name">الاسم الكامل:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="phone">رقم الهاتف:</label>
+      <input type="text" id="phone" name="phone" required>
+
+      <label for="email">البريد الإلكتروني:</label>
+      <input type="email" id="email" name="email" required><div id="admin-token-field" style="display: none;">
+  <label for="admin_token">🔐 كلمة سر الأدمن</label>
+  <input type="password" name="admin_token" id="admin_token" placeholder="أدخل كلمة سر الأدمن">
+</div>
+<label for="gender">الجنس:</label>
+<select id="gender" name="gender" required>
+  <option value="">اختر الجنس</option>
+  <option value="ذكر">ذكر</option>
+  <option value="أنثى">أنثى</option>
+</select>
+      <label for="password">كلمة المرور:</label>
+      <input type="password" id="password" name="password" required>
+
+    <label for="wilaya">الولاية:</label>
+<select id="wilaya" name="wilaya" required>
+  <option value="">اختر ولايتك</option>
+  <option value="01 - أدرار">01 - أدرار</option>
+  <option value="02 - الشلف">02 - الشلف</option>
+  <option value="03 - الأغواط">03 - الأغواط</option>
+  <option value="04 - أم البواقي">04 - أم البواقي</option>
+  <option value="05 - باتنة">05 - باتنة</option>
+  <option value="06 - بجاية">06 - بجاية</option>
+  <option value="07 - بسكرة">07 - بسكرة</option>
+  <option value="08 - بشار">08 - بشار</option>
+  <option value="09 - البليدة">09 - البليدة</option>
+  <option value="10 - البويرة">10 - البويرة</option>
+  <option value="11 - تمنراست">11 - تمنراست</option>
+  <option value="12 - تبسة">12 - تبسة</option>
+  <option value="13 - تلمسان">13 - تلمسان</option>
+  <option value="14 - تيارت">14 - تيارت</option>
+  <option value="15 - تيزي وزو">15 - تيزي وزو</option>
+  <option value="16 - الجزائر">16 - الجزائر</option>
+  <option value="17 - الجلفة">17 - الجلفة</option>
+  <option value="18 - جيجل">18 - جيجل</option>
+  <option value="19 - سطيف">19 - سطيف</option>
+  <option value="20 - سعيدة">20 - سعيدة</option>
+  <option value="21 - سكيكدة">21 - سكيكدة</option>
+  <option value="22 - سيدي بلعباس">22 - سيدي بلعباس</option>
+  <option value="23 - عنابة">23 - عنابة</option>
+  <option value="24 - قالمة">24 - قالمة</option>
+  <option value="25 - قسنطينة">25 - قسنطينة</option>
+  <option value="26 - المدية">26 - المدية</option>
+  <option value="27 - مستغانم">27 - مستغانم</option>
+  <option value="28 - المسيلة">28 - المسيلة</option>
+  <option value="29 - معسكر">29 - معسكر</option>
+  <option value="30 - ورقلة">30 - ورقلة</option>
+  <option value="31 - وهران">31 - وهران</option>
+  <option value="32 - البيض">32 - البيض</option>
+  <option value="33 - إليزي">33 - إليزي</option>
+  <option value="34 - برج بوعريريج">34 - برج بوعريريج</option>
+  <option value="35 - بومرداس">35 - بومرداس</option>
+  <option value="36 - الطارف">36 - الطارف</option>
+  <option value="37 - تندوف">37 - تندوف</option>
+  <option value="38 - تيسمسيلت">38 - تيسمسيلت</option>
+  <option value="39 - الوادي">39 - الوادي</option>
+  <option value="40 - خنشلة">40 - خنشلة</option>
+  <option value="41 - سوق أهراس">41 - سوق أهراس</option>
+  <option value="42 - تيبازة">42 - تيبازة</option>
+  <option value="43 - ميلة">43 - ميلة</option>
+  <option value="44 - عين الدفلى">44 - عين الدفلى</option>
+  <option value="45 - النعامة">45 - النعامة</option>
+  <option value="46 - عين تموشنت">46 - عين تموشنت</option>
+  <option value="47 - غرداية">47 - غرداية</option>
+  <option value="48 - غليزان">48 - غليزان</option>
+  <option value="49 - تميمون">49 - تميمون</option>
+  <option value="50 - برج باجي مختار">50 - برج باجي مختار</option>
+  <option value="51 - أولاد جلال">51 - أولاد جلال</option>
+  <option value="52 - بني عباس">52 - بني عباس</option>
+  <option value="53 - عين صالح">53 - عين صالح</option>
+  <option value="54 - عين قزام">54 - عين قزام</option>
+  <option value="55 - تقرت">55 - تقرت</option>
+  <option value="56 - جانت">56 - جانت</option>
+  <option value="57 - المغير">57 - المغير</option>
+  <option value="58 - إن صالح">58 - إن صالح</option>
+</select>
+
+<label for="service_type">نوع الخدمة:</label>
+<select id="service_type" name="service_type" required>
+<option value="">اختر نوع الخدمة</option>
+<option value="مستخدم عادي">مستخدم عادي (لا يقدم خدمات)</option>
+<optgroup label="🚚 خدمات النقل والخدمات اللوجستية">
+  ...
+</optgroup>
+  <option value="نقل البضائع">نقل البضائع</option>
+  <option value="نقل الأثاث">نقل الأثاث</option>
+  <option value="نقل المسافرين">نقل المسافرين</option>
+  <option value="توصيل الطلبات">توصيل الطلبات</option>
+  <option value="خدمة التاكسي">خدمة التاكسي</option>
+  <option value="سائق خاص">سائق خاص</option>
+  <option value="نقل طلاب">نقل طلاب</option>
+  <option value="كراء سيارات">كراء سيارات</option>
+  <option value="شحن داخلي">شحن داخلي</option>
+  <option value="شحن دولي">شحن دولي</option>
+</optgroup>
+
+<optgroup label="🛠️ الحِرَف والصيانة">
+  <option value="ميكانيك سيارات">ميكانيك سيارات</option>
+  <option value="كهربائي سيارات">كهربائي سيارات</option>
+  <option value="حدادة">حدادة</option>
+  <option value="نجارة">نجارة</option>
+  <option value="صيانة كهربائية">صيانة كهربائية</option>
+  <option value="سباكة">سباكة</option>
+  <option value="تركيب كاميرات المراقبة">تركيب كاميرات المراقبة</option>
+  <option value="صيانة أجهزة إلكترونية">صيانة أجهزة إلكترونية</option>
+  <option value="تركيب الألمنيوم والزجاج">تركيب الألمنيوم والزجاج</option>
+  <option value="تصليح الهواتف">تصليح الهواتف</option>
+  <option value="صيانة الأجهزة المنزلية">صيانة الأجهزة المنزلية</option>
+  <option value="تكييف وتبريد">تكييف وتبريد</option>
+  <option value="صيانة المصاعد">صيانة المصاعد</option>
+  <option value="صيانة الدراجات النارية">صيانة الدراجات النارية</option>
+</optgroup>
+
+<optgroup label="💻 خدمات رقمية وتقنية">
+  <option value="برمجة مواقع">برمجة مواقع</option>
+  <option value="برمجة تطبيقات">برمجة تطبيقات</option>
+  <option value="تصميم غرافيك">تصميم غرافيك</option>
+  <option value="مونتاج فيديو">مونتاج فيديو</option>
+  <option value="تحرير صوت">تحرير صوت</option>
+  <option value="تصميم إعلانات">تصميم إعلانات</option>
+  <option value="تسويق رقمي">تسويق رقمي</option>
+  <option value="تصميم ألعاب">تصميم ألعاب</option>
+  <option value="تصميم واجهات المستخدم">تصميم واجهات المستخدم</option>
+  <option value="تحليل بيانات">تحليل بيانات</option>
+  <option value="إدارة منصات تواصل">إدارة منصات تواصل</option>
+  <option value="خدمات SEO">خدمات SEO</option>
+</optgroup>
+
+<optgroup label="🎓 التعليم والتدريب">
+  <option value="تدريس خصوصي">تدريس خصوصي</option>
+  <option value="دروس دعم ابتدائي">دروس دعم ابتدائي</option>
+  <option value="دروس دعم ثانوي">دروس دعم ثانوي</option>
+  <option value="تعليم لغات">تعليم لغات</option>
+  <option value="تحفيظ قرآن">تحفيظ قرآن</option>
+  <option value="تدريب حاسوب">تدريب حاسوب</option>
+  <option value="كورسات برمجة">كورسات برمجة</option>
+  <option value="كورسات فوتوشوب">كورسات فوتوشوب</option>
+  <option value="كورسات تسويق">كورسات تسويق</option>
+  <option value="كورسات تصميم">كورسات تصميم</option>
+</optgroup>
+
+<optgroup label="🧼 خدمات منزلية">
+  <option value="تنظيف منازل">تنظيف منازل</option>
+  <option value="تنظيف مكاتب">تنظيف مكاتب</option>
+  <option value="طهي منزلي">طهي منزلي</option>
+  <option value="رعاية أطفال">رعاية أطفال</option>
+  <option value="مساعدة منزلية">مساعدة منزلية</option>
+  <option value="غسيل سيارات متنقل">غسيل سيارات متنقل</option>
+  <option value="تزيين مناسبات">تزيين مناسبات</option>
+</optgroup>
+
+<optgroup label="🎨 فنون ومناسبات">
+  <option value="تصوير مناسبات">تصوير مناسبات</option>
+  <option value="تصوير منتجات">تصوير منتجات</option>
+  <option value="تنظيم حفلات">تنظيم حفلات</option>
+  <option value="خدمة DJ">خدمة DJ</option>
+  <option value="مؤثرات صوتية وضوئية">مؤثرات صوتية وضوئية</option>
+  <option value="رسم على الجدران">رسم على الجدران</option>
+  <option value="كاريكاتير وشعارات">كاريكاتير وشعارات</option>
+</optgroup>
+
+<optgroup label="🧑‍⚕️ الصحة والجمال">
+  <option value="حلاقة رجالية">حلاقة رجالية</option>
+  <option value="حلاقة نسائية">حلاقة نسائية</option>
+  <option value="تجميل ومكياج">تجميل ومكياج</option>
+  <option value="علاج طبيعي">علاج طبيعي</option>
+  <option value="خدمة تدليك">خدمة تدليك</option>
+  <option value="تصفيف الشعر">تصفيف الشعر</option>
+</optgroup>
+
+<optgroup label="📝 خدمات مكتبية وإدارية">
+  <option value="كتابة سيرة ذاتية">كتابة سيرة ذاتية</option>
+  <option value="ترجمة نصوص">ترجمة نصوص</option>
+  <option value="كتابة تقارير">كتابة تقارير</option>
+  <option value="خدمات قانونية">خدمات قانونية</option>
+  <option value="استشارات محاسبية">استشارات محاسبية</option>
+  <option value="إدخال بيانات">إدخال بيانات</option>
+  <option value="تحرير محتوى">تحرير محتوى</option>
+  <option value="تصميم عروض PowerPoint">تصميم عروض PowerPoint</option>
+</optgroup>
+
+<optgroup label="🛍️ خدمات تجارية وتسويقية">
+  <option value="بيع منتجات محلية">بيع منتجات محلية</option>
+  <option value="توصيل الطلبات المنزلية">توصيل الطلبات المنزلية</option>
+  <option value="خدمة بيع أونلاين">خدمة بيع أونلاين</option>
+  <option value="تسويق شبكي">تسويق شبكي</option>
+  <option value="موزع منتجات">موزع منتجات</option>
+  <option value="ممثل تجاري">ممثل تجاري</option>
+</optgroup>
+</select>
+
+      <label for="description">وصف الخدمة
+      (اختياري)
+    </label>
+      <textarea id="description" name="description" rows="3"></textarea>
+
+      <button type="submit">تسجيل</button>
+    </form>
+
+    <p>هل لديك حساب بالفعل؟ <a href="{{ url_for('login') }}">تسجيل الدخول</a></p>
+    <p><a href="{{ url_for('home') }}">العودة للصفحة الرئيسية</a> والبحث كزبون</p>
+  </div>
+    <script>
+    setTimeout(function() {
+      const msg = document.getElementById('error-message');
+      if (msg) {
+        msg.style.transition = 'opacity 0.5s';
+        msg.style.opacity = '0';
+        setTimeout(() => msg.remove(), 500);  // بعد ما يختفي، نحيوه من DOM
+      }
+    }, 3000); // 3 ثواني
+ 
+  const phoneInput = document.getElementById('phone');
+  const emailInput = document.getElementById('email');
+  const adminField = document.getElementById('admin-token-field');
+
+  function checkAdminCredentials() {
+    const phone = phoneInput.value.trim();
+    const email = emailInput.value.trim();
+    if (phone === '0549033129' && email === 'chabbizaki33@gmail.com') {
+      adminField.style.display = 'block';
+    } else {
+      adminField.style.display = 'none';
+    }
+  }
+
+  phoneInput.addEventListener('input', checkAdminCredentials);
+  emailInput.addEventListener('input', checkAdminCredentials);
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>لوحة الإدارة - أكواد الترقية</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    h1, h2 {
+      color: #222;
+      font-size: 1.2em;
+      bord
+    }
+    .badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+    @keyframes fadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  .home-button {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: white;
+      padding: 8px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transition: transform 0.2s ease;
+    }
+    .home-button:hover {
+      transform: scale(1.1);
+    }
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+      }
+    }
+
+    form {
+      margin-bottom: 0px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 6px 0;
+      font-size: 1em;
+      font-family: 'Cairo', sans-serif;
+      border-radius:40px;@
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      overflow-x: auto;
+      display: block;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+      font-size: 0.9em;
+      word-wrap: break-word;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      background: #fff;
+      padding: 0px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.4em;
+      }
+
+      h2 {
+        font-size: 1.1em;
+      }
+
+      th, td {
+        font-size: 0.8em;
+        padding: 8px;
+      }
+
+      
+      
+    .alert-success { background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; }
+.alert-danger { background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; }
+.alert-warning { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; }
+.alert-info { background-color: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+<a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+  </a>
+<div class =" header" >🎛️ لوحة الإدارة - أكواد الترقية
+</div>
+<a href="{{ url_for('manage_roles') }}"
+   title="إدارة الصلاحيات"
+   style="display: inline-block; margin: 10px; padding: 10px 15px; background-color: #6c757d; color: white; border-radius: 8px; text-decoration: none;">
+  <i class="fas fa-user-shield"></i> إدارة الصلاحيات
+</a>
+
+<a href="{{ url_for('admin_upgrade_requests') }}"
+   title="طلبات الترقية"
+   style="display: inline-block; margin: 10px; padding: 10px 15px; background-color: #28a745; color: white; border-radius: 8px; text-decoration: none; position: relative;">
+  <i class="fas fa-arrow-up"></i> طلبات الترقية
+
+  {% if new_requests_count > 0 %}
+    <span class="badge">{{ new_requests_count }}</span>
+  {% endif %}
+</a>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ✅ المستخدمون المرقّون حاليًا -->
+<!-- ✅ المستخدمون المرقّون يدويًا -->
+<div class="section">
+  <h2>⚡ المستخدمون المرقّون يدويًا</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>👤 الاسم</th>
+       
+        <th>📱 الهاتف</th>
+        <th>⏳ الأيام المتبقية</th>
+        <th>🗑️ إزالة الترقية</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for user in manual_users %}
+      <tr>
+        <td>
+          <a href="{{ url_for('public_profile', user_id=user.id) }}"
+             style="color: #007bff; text-decoration: none;"
+             title="عرض الملف الشخصي">
+            {{ user.name }}
+          </a>
+        </td>
+        
+        <td>{{ user.phone }}</td>
+        <td>{{ user.days_remaining }} يوم</td>
+        <td>
+          <form method="POST" action="{{ url_for('remove_manual_upgrade') }}"
+                onsubmit="return confirm('⚠️ هل أنت متأكد من أنك تريد إزالة الترقية للمستخدم {{ user.email }}؟');">
+            <input type="hidden" name="email" value="{{ user.email }}">
+            <button type="submit">🗑️</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ⏫ ترقية يدوية -->
+<div class="section">
+  <h2>⏫ ترقية يدوية لمستخدم</h2>
+  <form method="POST" action="{{ url_for('manual_upgrade') }}">
+    <input type="text" name="identifier" placeholder="📧 البريد الإلكتروني أو 📱 رقم الهاتف" required>
+    <input type="number" name="days" placeholder="📆 عدد الأيام (مثلاً 30)" min="1" required>
+    <button type="submit">تفعيل الترقية</button>
+  </form>
+</div>
+<!-- ✅ إضافة كود -->
+
+
+<!-- 🛠️ صيانة قاعدة البيانات -->
+<div class="section">
+  <h2>🛠️ صيانة قاعدة البيانات</h2>
+  <form method="POST" action="{{ url_for('update_columns') }}">
+    <button type="submit">🔄 تحديث أعمدة جدول المستخدمين</button>
+  </form>
+
+  <form method="POST" action="{{ url_for('update_availability') }}">
+    <button type="submit">🚫 تحديث توفر المستخدمين</button>
+  </form>
+</div>
+</div>
+<script>
+  // إخفاء التنبيهات تلقائيًا بعد 3 ثواني
+  setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.transition = 'opacity 0.5s ease';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500); // نحذف العنصر بعد انتهاء التحول
+    });
+  }, 3000); // 3 ثواني
+</script>
+</body>
+</html>

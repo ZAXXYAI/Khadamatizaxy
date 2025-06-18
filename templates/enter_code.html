@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ترقية الحساب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .subtext {
+      color: #555;
+      margin: 15px auto;
+      font-size: 16px;
+    }
+
+    form {
+      margin-top: 25px;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      max-width: 320px;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #1877f2;
+      box-shadow: 0 0 4px #1877f2;
+    }
+
+    button {
+      background-color: #1877f2;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0d47a1;
+    }
+
+    .flash {
+      margin: 15px auto;
+      width: fit-content;
+      padding: 12px 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      animation: fadeOut 4s forwards;
+    }
+
+    .success { background-color: #d4edda; color: #155724; }
+    .error   { background-color: #f8d7da; color: #721c24; }
+
+    @keyframes fadeOut {
+      0%, 80% { opacity: 1; }
+      100% { opacity: 0; display: none; }
+    }
+
+    @media (max-width: 480px) {
+      input[type="text"], button {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <i class="fas fa-star"></i> ترقية حسابك
+</div>
+
+<div class="subtext">
+  <i class="fas fa-key"></i> هل لديك كود ترقية؟ أدخله أدناه
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% if message %}
+  <div class="flash {{ message_type }}">{{ message }}</div>
+{% endif %}
+
+<form method="POST">
+  <input type="text" name="code" placeholder="ادخل كود الترقية هنا" required>
+  <br>
+  <button type="submit"><i class="fas fa-level-up-alt"></i> تأكيد الترقية</button>
+</form>
+
+</body>
+</html>

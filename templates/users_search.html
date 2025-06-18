@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>البحث عن المستخدمين</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #eef2f7;
+      color: #333;
+      margin: 0;
+      padding: 0px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2a3f54;
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+        .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .form-container {
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+      transition: all 0.3s ease;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .form-row > * {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    input[type="text"], select {
+      padding: 12px;
+      border: 1px solid #cdd6e0;
+      border-radius: 12px;
+      font-size: 15px;
+      background-color: #f9fbfd;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #3f88c5;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    button:hover {
+      background-color: #326fa3;
+    }
+
+    .results {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .user-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 16px;
+      font-size: 14px;
+    }
+
+    .user-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .user-header img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #3f88c5;
+    }
+
+    .user-header a {
+      font-weight: bold;
+      color: #3f88c5;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .info-row-single {
+      display: flex;
+      justify-content: space-between;
+      color: #666;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .no-results {
+      color: #e74c3c;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin: 25px auto 10px;
+      padding: 10px 25px;
+      background-color: #f2f2f2;
+      color: #444;
+      border: none;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <i class="fas fa-search"></i> البحث عن المستخدمين
+</div>
+
+<a href="{{ url_for('home') }}" class="back-btn"><i class="fas fa-arrow-right"></i> الصفحة الرئيسية</a>
+
+{% if not query and (not wilaya or wilaya == 'all') and (not gender or gender == 'الكل') %}
+<div class="form-container">
+  <form method="get" action="{{ url_for('search_users') }}">
+    <div class="form-row">
+      <input type="text" name="query" placeholder="الاسم أو الهاتف أو الإيميل" value="{{ query }}">
+
+      <select name="wilaya">
+        <option value="all" {% if wilaya == 'all' or not wilaya %}selected{% endif %}>كل الولايات</option>
+        {% for w in [
+          "01 - أدرار", "02 - الشلف", "03 - الأغواط", "04 - أم البواقي", "05 - باتنة", "06 - بجاية", "07 - بسكرة",
+          "08 - بشار", "09 - البليدة", "10 - البويرة", "11 - تمنراست", "12 - تبسة", "13 - تلمسان", "14 - تيارت",
+          "15 - تيزي وزو", "16 - الجزائر", "17 - الجلفة", "18 - جيجل", "19 - سطيف", "20 - سعيدة", "21 - سكيكدة",
+          "22 - سيدي بلعباس", "23 - عنابة", "24 - قالمة", "25 - قسنطينة", "26 - المدية", "27 - مستغانم", "28 - المسيلة",
+          "29 - معسكر", "30 - ورقلة", "31 - وهران", "32 - البيض", "33 - إليزي", "34 - برج بوعريريج", "35 - بومرداس",
+          "36 - الطارف", "37 - تندوف", "38 - تيسمسيلت", "39 - الوادي", "40 - خنشلة", "41 - سوق أهراس", "42 - تيبازة",
+          "43 - ميلة", "44 - عين الدفلى", "45 - النعامة", "46 - عين تموشنت", "47 - غرداية", "48 - غليزان", "49 - تميمون",
+          "50 - برج باجي مختار", "51 - أولاد جلال", "52 - بني عباس", "53 - عين صالح", "54 - عين قزام", "55 - تقرت",
+          "56 - جانت", "57 - المغير", "58 - إن صالح"
+        ] %}
+          <option value="{{ w }}" {% if wilaya == w %}selected{% endif %}>{{ w }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="gender">
+        <option value="الكل" {% if gender == 'الكل' %}selected{% endif %}>الكل</option>
+        <option value="ذكر" {% if gender == 'ذكر' %}selected{% endif %}>ذكر</option>
+        <option value="أنثى" {% if gender == 'أنثى' %}selected{% endif %}>أنثى</option>
+      </select>
+
+      <button type="submit"><i class="fas fa-search"></i> بحث</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{% if query or (wilaya and wilaya != 'all') or (gender and gender != 'الكل') %}
+  <div class="results">
+    {% if users and users|length > 0 %}
+      {% for user in users %}
+        <div class="user-card">
+          <div class="user-header">
+           <img src="{{ user.image_path if user.image_path else url_for('static', filename='default.jpg') }}" alt="صورة {{ user.name }}" />
+            <a href="{{ url_for('public_profile', user_id=user.id) }}">{{ user.name }}</a>
+          </div>
+          <div class="info-row-single">
+            <span><i class="fas fa-map-marker-alt"></i> {{ user.wilaya }}</span>
+            <span>
+              {% if user.gender == 'ذكر' %}
+                <i class="fas fa-mars"></i> ذكر
+              {% elif user.gender == 'أنثى' %}
+                <i class="fas fa-venus"></i> أنثى
+              {% else %}
+                <i class="fas fa-user"></i> غير محدد
+              {% endif %}
+            </span>
+            <span><i class="fas fa-briefcase"></i> {{ user.service_type }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-results"><i class="fas fa-times-circle"></i> لا توجد حسابات تطابق البحث</p>
+    {% endif %}
+    <a href="{{ url_for('search_users') }}" class="back-btn"><i class="fas fa-redo"></i> بحث جديد</a>
+  </div>
+{% endif %}
+
+</body>
+</html>

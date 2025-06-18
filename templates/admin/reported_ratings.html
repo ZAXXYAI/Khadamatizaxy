@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🚨 التقييمات المبلغ عنها</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+  
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #e74c3c;
+      margin-bottom: 25px;
+    }
+
+    .ratings-scroll {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .rating-item {
+      background-color: #fdf2f2;
+      border: 1px solid #e0d1d1;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stars {
+      color: #f39c12;
+    }
+
+    .rating-item a {
+      color: #2c3e50;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  .flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: auto;
+    max-width: 300px;
+  }
+
+  .flash-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: slide-down 0.3s ease-out;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+
+  .flash-success   { background-color: #e6f9f0; border-left: 5px solid #2ecc71; color: #2c3e50; }
+  .flash-error     { background-color: #fdecea; border-left: 5px solid #e74c3c; color: #c0392b; }
+  .flash-warning   { background-color: #fff6e0; border-left: 5px solid #f1c40f; color: #8e6c00; }
+  .flash-info      { background-color: #eaf4fc; border-left: 5px solid #3498db; color: #2c3e50; }
+
+  @keyframes slide-down {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+
+
+    .rating-item a:hover {
+      text-decoration: underline;
+    }
+
+    
+
+    .btn-back-home {
+      display: inline-block;
+      background-color: #3498db;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    .btn-back-home:hover {
+      background-color: #2980b9;
+    }
+
+    p.center {
+      text-align: center;
+      color: #999;
+      font-size: 1rem;
+    }
+    .action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap
+  font-family: 'Cairo', sans-serif;
+}
+
+.delete-btn, .ignore-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.ignore-btn {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>🚨 التقييمات المبلغ عنها</h2>
+
+  <div class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">
+            {% if category == 'success' %}✅{% elif category == 'error' %}❌{% elif category == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  {% if reported %}
+    <div class="ratings-scroll">
+      {% for r in reported %}
+        <div class="rating-item">
+          <div>
+        <small>    <strong>👤صاحب التعليق:</strong>        </small>   
+           (<a href="{{ url_for('public_profile', user_id=r.customer_id) }}">{{ r.customer_name }}</a>)
+  </div>
+
+          <div>
+        <small><strong>🧰 العامل:</strong></small>  
+         (<a href="{{ url_for('public_profile', user_id=r.worker_id) }}">{{ r.worker_name }}</a>) 
+          </div>
+
+          <div>
+         <small> <strong>⭐ التقييم:</strong>
+         </small>
+            <span class="stars">{% for i in range(r.rating) %}⭐{% endfor %}</span>
+          </div>
+
+          <div>
+           <small><strong>💬 التعليق:</strong></small> </br>
+        
+        <small style="color: #555;">{{ r.comment }}</small>  
+          </div>
+
+          <div>
+          <small><strong>🕒 التاريخ:</strong></small> 
+            <small style="color: #888;">{{ r.date_rated | datetimeformat }}</small>
+          </div>
+
+          <div>
+       <small><strong>🚩 عدد البلاغات:</strong></small>
+            <span style="color: #c0392b; font-weight: bold;">{{ r.report_count }}</span>    
+          </div>
+
+          <div class="action-buttons">
+  <form action="{{ url_for('delete_rating') }}" method="POST" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا التقييم؟')">
+    <input type="hidden" name="rating_id" value="{{ r.id }}">
+    <button type="submit" class="delete-btn">🗑️ حذف التقييم</button>
+  </form>
+
+  <form action="{{ url_for('ignore_report') }}" method="POST" onsubmit="return confirm('هل تريد تجاهل هذا البلاغ؟')">
+    <input type="hidden" name="rating_id" value="{{ r.id }}">
+    <button type="submit" class="ignore-btn">🚫 تجاهل البلاغ</button>
+  </form>
+</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="center">لا توجد تقييمات مبلغ عنها حالياً.</p>
+  {% endif %}
+
+  <div style="text-align: center; margin-top: 20px;">
+    <a href="{{ url_for('home') }}" class="btn-back-home">⬅️ الرجوع إلى الرئيسية</a>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    const flashMessages = document.querySelectorAll('.flash-message');
+    flashMessages.forEach(msg => {
+      msg.style.transition = "opacity 0.5s ease-out";
+      msg.style.opacity = 0;
+      setTimeout(() => msg.remove(), 500);  // نحّيه بعد اختفائه
+    });
+  }, 2000); // 2 ثواني
+</script>
+</body>
+</html>

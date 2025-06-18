@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>بروفايل العامل - {{ user_profile.name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            background: white;
+            margin: 40px auto;
+            padding: 25px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #4CAF50;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 10px 0 5px;
+            font-weight: 700;
+            color: #222;
+        }
+        p {
+            margin: 6px 0;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #444;
+        }
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(76,175,80,0.3);
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .rating {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            color: #ffa500;
+        }
+        .available {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #4caf5080;
+            color: #4caf50;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ user_profile.image_path or '/static/default_avatar.png' }}" alt="صورة {{ user_profile.name }}" class="profile-img" />
+        <h1>{{ user_profile.name }}</h1>
+        
+        {% if user_profile.is_available %}
+            <div class="available">متوفر الآن</div>
+        {% else %}
+            <div class="available" style="background-color:#ccc; color:#777;">غير متوفر</div>
+        {% endif %}
+        
+        <p><span class="info-label">الخدمة:</span> {{ user_profile.service_type }}</p>
+        <p><span class="info-label">الولاية:</span> {{ user_profile.wilaya }}</p>
+        <p><span class="info-label">البلدية:</span> {{ user_profile.baladiya or 'غير محددة' }}</p>
+        <p><span class="info-label">الوصف:</span> {{ user_profile.description or 'لا يوجد وصف متاح.' }}</p>
+
+        <div class="buttons">
+            <a href="/chat/{{ user_profile.id }}" class="btn">دردشة</a>
+            <a href="tel:{{ user_profile.phone }}" class="btn">اتصال</a>
+            <a href="/rate/{{ user_profile.id }}" class="btn">تقييم</a>
+        </div>
+    </div>
+</body>
+</html>

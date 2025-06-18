@@ -1,0 +1,249 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>حالة الترقية</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+    background: linear-gradient(to right, #eef2f7, #d6eaff);
+    margin: 0;
+    padding: 16px;
+    color: #333;
+  }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .top-bar a {
+    text-decoration: none;
+    color: #1877f2;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.07);
+    padding: 20px;
+    border: 1px solid #e0eaff;
+    overflow-x: auto;
+  }
+
+  .card h2, .card h3 {
+    color: #1565c0;
+    margin-bottom: 12px;
+  }
+
+  .status {
+    font-size: 18px;
+    font-weight: bold;
+    color: #444;
+  }
+
+  .days-left {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .days-left.orange { color: #f9a825; }
+  .days-left.red { color: #e53935; }
+  .days-left.green { color: #43a047; }
+
+  .payment-box img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .payment-box img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 400px;
+  }
+
+  th, td {
+    border: 1px solid #deeaf7;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  th {
+    background-color: #e3f2fd;
+    color: #333;
+    font-weight: bold;
+  }
+
+  td a {
+    color: #1565c0;
+    text-decoration: none;
+  }
+
+  .whatsapp-icon {
+    color: #25D366;
+    font-size: 18px;
+    margin-left: 5px;
+  }
+
+  /* مودال الصورة */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.85);
+  }
+
+  .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    animation: zoomIn 0.4s ease;
+  }
+
+  @keyframes zoomIn {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .close:hover {
+    color: #ff5e5e;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 10px;
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    table {
+      min-width: unset;
+      font-size: 13px;
+    }
+  }
+</style>
+
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body><div class="top-bar">
+  <a href="{{ url_for('home') }}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#1877f2" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+    العودة للرئيسية
+  </a>
+</div><div class="container">
+  <div class="card">
+    <h2>🛡️ حالة الترقية</h2>
+    <div class="status">الحالة: {{ status }}</div>{% if status == 'مفعل' and days_left is not none %}
+  <div class="days-left green">مدة الترقية المتبقية: {{ days_left }} يوم</div>
+{% elif status == 'قيد الانتظار' %}
+  <div class="days-left orange">جاري مراجعة طلبك، يرجى الانتظار...</div>
+{% elif status == 'منتهي' %}
+  <div class="days-left red">انتهت صلاحية الترقية</div>
+{% endif %}
+
+  </div>{% if payment_info %}
+
+  <div class="card payment-box">
+    <h3>📩 تفاصيل طلب الترقية الأخير</h3>
+    <p><strong>مدة الترقية المطلوبة:</strong> {{ payment_info.note or 'غير محددة' }}</p>
+    <p><strong>تاريخ الإرسال:</strong> {{ payment_info.created_at }}</p>{% if payment_info.image_path %}
+  <p><strong>إثبات الدفع:</strong></p>
+  <img id="thumbnail" src="{{ url_for('static', filename=payment_info.image_path.split('static/')[-1]) }}" alt="صورة الدفع">
+{% endif %}
+
+  </div>  <div class="card">
+    <h3>👥 فريق الدعم والمحررين</h3>
+    <p>إذا طال انتظارك، اتصل بأحد الأعضاء للمساعدة:</p>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>الهاتف</th>
+            <th>الإيميل</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in non_user_roles %}
+            {% if user.role == 'editor' %}
+              <tr>
+                <td>{{ user.name }}</td>
+                <td>
+                  <a href="tel:{{ user.phone }}">{{ user.phone }}</a>
+                  <a href="https://wa.me/{{ user.phone|replace('+','')|replace(' ','') }}" target="_blank" class="whatsapp-icon">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </td>
+                <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+              </tr>
+            {% endif %}
+          {% else %}
+            <tr><td colspan="3">لا يوجد مساعدين حالياً.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div><div id="imgModal" class="modal">
+  <span class="close" onclick="document.getElementById('imgModal').style.display='none'">&times;</span>
+  <img class="modal-content" id="modalImage">
+</div><script>
+  const thumb = document.getElementById("thumbnail");
+  const modal = document.getElementById("imgModal");
+  const modalImg = document.getElementById("modalImage");
+
+  if (thumb) {
+    thumb.onclick = function () {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    }
+  }
+</script></body>
+</html>

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{{ user.name }} - صفحة مزود الخدمة</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        .custom-reason {
+  display: none;
+  margin-top: 8px;
+  padding: 6px;
+  width: 100%;
+  max-width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+}
+.delete-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 5px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.ban-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ✅ توسيط المحتوى أفقيًا داخل الفورم */
+  justify-content: center; /* ✅ توسيط عمودي لو احتجت */
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto; /* ✅ يجعل الفورم نفسه في المنتصف */
+  max-width: 300px;
+  padding: 10px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.ban-form select,
+.ban-form input[type="text"] {
+  margin-bottom: 8px;
+  padding: 6px;
+  width: 100%;
+  max-width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.ban-form .ban-btn {
+  padding: 8px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.ban-form .ban-btn:hover {
+  background-color: #c82333;
+}
+
+.ban-form .custom-reason {
+  display: none;
+}
+
+.ban-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 30px;
+  margin-top: 8px;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+}
+
+
+.unban-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 30px;
+  margin-top: 8px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Cairo', sans-serif;
+}
+        .profile-card {
+            max-width: 400px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .profile-card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto 10px;
+            border: 3px solid #ddd;
+        }
+        #friendRequestActions {
+position: fixed;
+top: 15px;
+right: 15px;
+z-index: 1000;
+}
+
+.friend-request-icon {
+background: white;
+padding: 10px;
+border-radius: 50%;
+box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+cursor: pointer;
+transition: transform 0.2s ease;
+}
+
+.btn-call {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 40px;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'Cairo', sans-serif;
+}
+     .alert-success { background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; }
+.alert-danger { background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; }
+.alert-warning { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; }
+.alert-info { background-color: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; }
+
+.btn-call i {
+    margin-left: 5px;
+}
+
+.btn-call-disabled {
+    background-color: #999;
+    color: #eee;
+    padding: 8px 15px;
+    border-radius: 40px;
+    border: none;
+    cursor: not-allowed;
+    display: inline-block;
+    font-family: 'Cairo', sans-serif;
+}
+.btn-call-disabled i {
+    margin-left: 5px;
+}
+
+
+.friend-request-icon:hover {
+transform: scale(1.1);
+}
+
+.friend-request-icon i {
+font-size: 24px;
+color: #1877f2;
+}
+
+#requestControls {
+display: flex;
+gap: 10px;
+margin-top: 10px;
+}
+
+.btn {
+padding: 8px 12px;
+border-radius: 20px;
+border: none;
+cursor: pointer;
+font-size: 14px;
+}
+
+.btn.accept {
+background: #28a745;
+color: white;
+}
+
+.btn.reject {
+background: #dc3545;
+color: white;
+}
+        .user-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            text-align: center;
+        }
+        .user-info {
+            text-align: center;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .status {
+          text-align: center;
+          padding: 10px 15px;
+          border-radius: 8px;
+          font-weight: bold;
+          font-size: 16px;
+          width: fit-content;
+          margin: 10px auto;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+.status.green {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status.red {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+        
+
+        .actions {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .actions a {
+            text-decoration: none;
+            background: #1877f2;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+ .rating-item {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ddd;
+  font-size: 16px;
+}
+
+.rating-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  direction: rtl; /* مهم باش يخلي الاسم على اليسار والنجوم على اليمين */
+}
+
+.rating-item strong {
+  color: #333;
+}
+
+.rating-item .stars {
+  color: gold;
+  white-space: nowrap;
+}
+
+.ratings {
+  margin-top: 20px;
+}
+
+.ratings-scroll {
+  max-height: 250px; /* تقدر تغيّر الارتفاع حسب الحاجة */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 20px;
+  background: #f9f9f9;
+}
+        .fullscreen-img {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .fullscreen-img img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 20px auto 0;
+            background: #555;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .home-button {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: white;
+            padding: 8px;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+        .home-button:hover {
+            transform: scale(1.1);
+        }
+        .user-bio-container {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.bio-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+  color: #444;
+}
+
+.user-bio-scroll {
+  max-height: 100px; /* غيّر القيمة حسب ما تحب */
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 30px;
+  background: #f9f9f9;
+  line-height: 1.6;
+  font-size: 15px;
+  direction: rtl; /* لو كان النص بالعربية */
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.friend-request-icon {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: white;
+      padding: 10px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.2s ease;
+    }
+
+    .friend-request-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .friend-request-icon i {
+      font-size: 24px;
+      color: #1877f2;
+    }
+    </style>
+</head>
+<body>
+
+
+
+<div class="profile-card">  
+
+{% if session.get('role') == 'admin' %}
+  {% if not is_blocked %}
+   <form method="POST" action="{{ url_for('block_user') }}" class="ban-form" onsubmit="return confirm('هل تريد حظر هذا المستخدم؟')">
+  <input type="hidden" name="user_id" value="{{ user.id }}">
+
+<select name="reason" id="reason-select" onchange="toggleCustomReason()">
+  <option value="تعليق غير لائق">تعليق غير لائق</option>
+  <option value="تلاعب بالترقيات">تلاعب بالترقيات</option>
+  <option value="وصف خدمة غير لائق">وصف خدمة غير لائق</option>
+  <option value="صورة شخصية غير لائقة">صورة شخصية غير لائقة</option>
+  <option value="إبلاغات كثيرة">إبلاغات كثيرة</option>
+  <option value="محتوى غير لائق">محتوى غير لائق</option>
+  <option value="سلوك مسيء">سلوك مسيء</option>
+  <option value="معلومات مضللة">معلومات مضللة</option>
+  <option value="تحريض على العنف أو الكراهية">تحريض على العنف أو الكراهية</option>
+  <option value="كلام مسيء عن التطبيق">كلام مسيء عن التطبيق</option>
+  <option value="أخرى">أخرى...</option>
+</select>
+
+<input type="text" name="custom_reason" id="custom-reason" class="custom-reason" placeholder="اكتب السبب..." />
+  <button type="submit" class="ban-btn">🚫 حظر نهائي</button>
+</form>
+  {% else %}
+    <form method="POST" action="{{ url_for('unblock_user') }}" onsubmit="return confirm('هل تريد إلغاء الحظر؟')">
+      <input type="hidden" name="user_id" value="{{ user.id }}">
+      <button type="submit" class="unban-btn">✅ إلغاء الحظر</button>
+    </form>
+    <p style="color:red;">⛔ هذا المستخدم محظور</p>
+  {% endif %}
+{% endif %}
+    <img src="{{ user.image_path or '/static/default.jpg' }}" onclick="showImage(this.src)">  
+<!-- عنصر التكبير -->
+<div class="fullscreen-img" onclick="this.style.display='none'" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:9999;">
+  <img id="zoomed-img" src="" alt="صورة مكبرة"
+       style="width: auto; height: auto; max-width: 95vw; max-height: 95vh; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.3); cursor: zoom-out; object-fit: contain;">
+</div>
+      
+    <div class="user-name">{{ user.name }}</div>  
+      
+    <div class="user-info">  
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#666" viewBox="0 0 24 24" style="vertical-align:middle; margin-left:5px;">
+  <path d="M21 7H5a1 1 0 010-2h16v2zm0 2H3a1 1 0 00-1 1v9a2 2 0 002 2h16a2 2 0 002-2v-9a1 1 0 00-1-1zm-3 5a1 1 0 110 2 1 1 0 010-2z"/>
+</svg>
+        {{ user.service_type }}<br>  
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#666" viewBox="0 0 16 16" style="vertical-align:middle; margin-left:5px;">
+            <path d="M8 0a5 5 0 0 1 5 5c0 2.5-3 6.5-5 9.5C6 11.5 3 7.5 3 5a5 5 0 0 1 5-5zm0 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+        </svg>
+        {{ user.wilaya }}  
+    </div>  
+  
+<div class="status {{ 'green' if user.is_available else 'red' }}">
+  {% if user.is_available %}
+    ✅ متاح الآن
+  {% else %}
+    ❌ غير متاح
+  {% endif %}
+</div>
+              {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+  
+{% if user.description %}  
+  <div class="user-bio-container">
+    <strong class="bio-title">
+     
+      وصف الخدمة
+      :</strong>
+    <div class="user-bio-scroll">
+      {{ user.description }}
+    </div>
+  </div>  
+{% endif %}
+  
+    {% if average_rating %}  
+    <div class="average-rating" style="text-align:center; margin-bottom:15px;">  
+        <span style="font-size: 20px; color: #ffcc00;">  
+            ⭐ {{ average_rating }} / 5  
+        </span>  
+        <div style="font-size: 14px; color: #777;">تقييم عام بناءً على {{ ratings|length }} مراجعات</div>  
+    </div>  
+    {% endif %}  
+  
+   {% if user_friends %}  
+<div class="friends" style="margin-bottom: 15px;">  
+    <h3 style="font-size:18px; margin-bottom:10px; border-bottom:1px solid #eee;">الأصدقاء:</h3>  
+    <div style="display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px;">  
+        {% for friend in user_friends %}  
+        <div style="text-align:center;">  
+            <a href="{{ url_for('public_profile', user_id=friend.id) }}">  
+                <img src="{{ friend.image_path or '/static/default.jpg' }}"   
+                     alt="{{ friend.name }}"  
+                     style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #ccc;">  
+            </a>  
+        </div>  
+        {% endfor %}  
+    </div>  
+</div>  
+{% endif %}
+
+   <div class="actions">
+    {% if user.show_phone %}
+        <a href="tel:{{ user.phone }}" class="btn-call">
+            <i class="fa fa-phone"></i> إتصال
+        </a>
+    {% else %}
+        <button class="btn-call-disabled" disabled title="رقم الهاتف غير متاح">
+            <i class="fa fa-phone-slash"></i> لا يمكن 
+        </button>
+    {% endif %}
+
+    <a href="{{ url_for('chat.chat', receiver_id=user.id) }}" aria-label="الدردشة مع {{ user.name }}">
+        <i class="fas fa-comments"></i> مراسلة
+    </a>
+    <a href="{{ url_for('rate') }}?worker_id={{ user.id }}" aria-label="قيم {{ user.name }}">
+        <i class="fas fa-star-half-alt"></i> تقييم
+    </a>
+</div>
+
+{% if ratings %}
+  <div class="ratings">
+    <h3>
+      <i class="fa fa-star"></i> التقييمات ({{ ratings|length }})
+    </h3>
+    <div class="ratings-scroll">
+      {% for r in ratings %}
+        <div class="rating-item">
+          <div class="rating-header">
+            {% if session.get('role') in ['admin', 'editor'] %}
+              <strong>
+                <a href="{{ url_for('public_profile', user_id=r.customer_id) }}">
+                  {{ r.customer_name }}
+                </a>
+              </strong><br>
+            {% endif %}
+            <span class="stars">
+              {% for i in range(r.rating) %}
+                ⭐
+              {% endfor %}
+            </span>
+          </div>
+
+          <small>{{ r.comment }}</small><br>
+          <small><p></p> {{ r.date_rated | datetimeformat }}</small><br>
+
+          {% if session.get('role') in ['admin', 'editor'] %}
+            <form action="{{ url_for('delete_rating') }}" method="POST" style="display:inline;">
+              <input type="hidden" name="rating_id" value="{{ r.id }}">
+              <button type="submit" class="delete-btn" onclick="return confirm('هل أنت متأكد أنك تريد حذف هذا التقييم؟')">
+                🗑️ حذف
+              </button>
+            </form>
+          {% else %}
+            <form action="{{ url_for('report_rating') }}" method="POST" style="display:inline;">
+              <input type="hidden" name="rating_id" value="{{ r.id }}">
+              <input type="hidden" name="next_url" value="{{ request.path }}">
+              <button type="submit" class="report-btn" onclick="return confirm('هل تريد الإبلاغ عن هذا التقييم؟')">
+                🚩 إبلاغ
+              </button>
+            </form>
+          {% endif %}
+
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+<a class="back-button" href="javascript:history.back()"><i class="fas fa-arrow-right"></i> رجوع</a>
+
+<div class="fullscreen-img" onclick="this.style.display='none'">
+    <img src="" id="zoomed-img">
+</div>
+<a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+</a>
+<div id="friendRequestActions">
+  <div class="friend-request-icon" onclick="handleFriendRequest({{ user.id }})">
+    <i class="fas fa-user-plus" id="friendRequestIcon"></i>
+  </div>
+  <div id="requestControls" style="display: none;">
+<a href="{{ url_for('friend_requests') }}" class="btn accept">
+  <i class="fas fa-check"></i> قبول
+</a>
+<a href="{{ url_for('friend_requests') }}" class="btn reject">
+  <i class="fas fa-times"></i> رفض
+</a>
+  </div>
+</div>
+
+<script>
+  // التحقق من حالة العلاقة بين المستخدمين
+  async function checkFriendshipStatus() {
+    try {
+      const response = await fetch('/check_friendship_status/{{ user.id }}');
+      const data = await response.json();
+
+      const icon = document.getElementById('friendRequestIcon');
+      const requestControls = document.getElementById('requestControls');
+
+      if (data.status === 'friends') {
+        icon.className = 'fas fa-user-friends';
+        icon.style.cursor = 'pointer';
+        requestControls.style.display = 'none';
+      } else if (data.status === 'pending') {
+        if (data.direction === 'received') {
+          icon.style.display = 'none';
+          requestControls.style.display = 'flex';
+        } else {
+          icon.className = 'fas fa-user-minus';
+          requestControls.style.display = 'none';
+        }
+      } else {
+        icon.className = 'fas fa-user-plus';
+        requestControls.style.display = 'none';
+      }
+    } catch (error) {
+      console.error('خطأ في التحقق من حالة العلاقة:', error);
+    }
+  }
+  window.onload = checkFriendshipStatus;
+
+  // إرسال/إلغاء/حذف طلب الصداقة
+  async function handleFriendRequest(userId) {
+    try {
+      const icon = document.getElementById('friendRequestIcon');
+      let url = '';
+      let method = 'POST';
+
+      if (icon.classList.contains('fa-user-plus')) {
+        url = `/send_friend_request/${userId}`;
+      } else if (icon.classList.contains('fa-user-minus')) {
+        const confirmCancel = confirm('هل أنت متأكد من إلغاء طلب الصداقة؟');
+        if (confirmCancel) {
+          url = `/cancel_friend_request/${userId}`;
+        } else {
+          return;
+        }
+      } else if (icon.classList.contains('fa-user-friends')) {
+        const confirmDelete = confirm('هل أنت متأكد من حذف هذا الصديق؟');
+        if (confirmDelete) {
+          url = `/delete_friend/${userId}`;
+        } else {
+          return;
+        }
+      }
+
+      const response = await fetch(url, { method });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message || 'تم بنجاح!');
+        location.reload();
+      } else {
+        alert(data.error || data.message || 'حدث خطأ');
+      }
+    } catch (error) {
+      alert('حدث خطأ أثناء الاتصال بالخادم.');
+    }
+  }
+
+  // قبول طلب الصداقة
+  async function handleAcceptFriendRequest(userId) {
+    try {
+      const response = await fetch(`/accept_friend_request/${userId}`, { method: 'POST' });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message || 'تم قبول طلب الصداقة بنجاح!');
+        location.reload();
+      } else {
+        alert(data.error || data.message || 'حدث خطأ');
+      }
+    } catch (error) {
+      alert('حدث خطأ أثناء الاتصال بالخادم.');
+    }
+  }
+
+  // رفض طلب الصداقة
+  async function handleRejectFriendRequest(userId) {
+    try {
+      const response = await fetch(`/reject_friend_request/${userId}`, { method: 'POST' });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message || 'تم رفض طلب الصداقة بنجاح!');
+        location.reload();
+      } else {
+        alert(data.error || data.message || 'حدث خطأ');
+      }
+    } catch (error) {
+      alert('حدث خطأ أثناء الاتصال بالخادم.');
+    }
+  }
+  setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.transition = 'opacity 0.5s ease';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500); // نحذف العنصر بعد انتهاء التحول
+    });
+  }, 3000); // 3 ثواني
+
+
+  // عرض الصورة بشكل مكبر
+  function showImage(src) {
+    const fullscreen = document.querySelector('.fullscreen-img');
+    document.getElementById('zoomed-img').src = src;
+    fullscreen.style.display = 'flex';
+  }
+  
+
+
+  function toggleCustomReason() {
+    const select = document.getElementById('reason-select');
+    const customInput = document.getElementById('custom-reason');
+    if (select.value === 'أخرى') {
+      customInput.style.display = 'block';
+    } else {
+      customInput.style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>

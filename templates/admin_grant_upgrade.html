@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ترقية مخصصة</title>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;; background-color: #f9f9f9; padding: 0px; }
+        .alert-success { background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; }
+.alert-danger { background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; }
+.alert-warning { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; }
+.alert-info { background-color: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; }
+    form { background-color: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; }
+    label { display: block; margin: 10px 0 5px; }
+    input[type="number"], button {
+      width: 100%; padding: 10px; border-radius: 20px; border: 1px solid #ccc; margin-bottom: 15px;
+      font-family: 'Cairo', sans-serif;;
+    }
+    button { background-color: #00b894; color: white; border: none; cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+      border-radius:20px;
+      margin-top: 20px;
+    }
+    button:hover { background-color: #019875; }
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 8px 20px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+    .card-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.card-link, .back-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #f8f9fa;
+  color: #343a40;
+  text-decoration: none;
+  font-weight: bold;
+  border: 2px solid #dee2e6;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.card-link i, .back-home-btn i {
+  font-size: 18px;
+}
+
+.card-link:hover, .back-home-btn:hover {
+  background-color: #e2e6ea;
+  transform: translateY(-2px);
+  color: #000;
+}
+  </style>
+</head>
+<body>
+
+  <div class ="header">  
+  🎁 منح ترقية مجانية
+  </div>
+
+  
+            {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+  <form method="POST">
+    <label for="duration">عدد أيام الترقية:</label>
+    <input type="number" name="duration" id="duration" min="1" value="1" required>
+
+    <button type="submit">🚀 منح الترقية</button>
+  </form>
+
+<form method="POST" action="{{ url_for('remove_custom_upgrades') }}" onsubmit="return confirm('هل أنت متأكد أنك تريد نزع الترقية؟')">
+  <button style="background-color: #d63031; color: white; padding: 10px; border-radius: 20px; border: none; margin-top: 0px;">
+      🗑️ نزع الترقية من جميع المستفيدين من العرض
+  </button>
+</form>
+
+ {% if session.get('role') in ['admin'] %}
+  <div class="card-buttons">
+    <a href="{{ url_for('admin_codes') }}" class="card-link">
+      <i class="fas fa-key" style="color: #fd7e14;"></i> أكواد الترقية
+    </a>
+
+    <a href="{{ url_for('home') }}" class="back-home-btn">
+      <i class="fas fa-home" style="color: #00C9A7;"></i> الرجوع إلى الرئيسية
+    </a>
+  </div>
+{% endif %}
+<script>
+  setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.transition = 'opacity 0.5s ease';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500); // نحذف العنصر بعد انتهاء التحول
+    });
+  }, 1000); // 3 ثواني
+  
+</script>
+</body>
+</html>

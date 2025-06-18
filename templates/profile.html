@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ملفك الشخصي - خدماتي</title>
+  <!-- مكتبة Font Awesome -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    rel="stylesheet" />
+  <style>
+    /* أسلوب فيسبوك - ألوان زرقاء وخلفية بيضاء */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+        
+      
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #e9ebee; /* لون خلفية فيسبوك فاتح */
+      color: #1c1e21; /* لون النص داكن */
+    }
+    .alert-success { background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; }
+.alert-danger { background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; }
+.alert-warning { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; }
+.alert-info { background-color: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; }
+    .ratings-box {
+  max-height: 250px; /* الطول اللي تحب */
+  overflow-y: auto; /* تمرير عمودي */
+  overflow-x: hidden; /* ما نحتاج تمرير أفقي */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #f9f9f9;
+  margin-top: 15px;
+}
+
+    .container {
+      max-width: 400px;
+      margin: 0px auto;
+      padding: 25px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.2);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #1877f2; /* لون شعار فيسبوك الأزرق */
+      font-size: 24px;
+      margin-bottom: 25px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+      color: #050505;
+      font-size: 15px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border: 1px solid #ccd0d5;
+      border-radius: 6px;
+      font-size: 18px;
+      font-family: 'Cairo', sans-serif;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #1877f2;
+      outline: none;
+      box-shadow: 0 0 5px #1877f2aa;
+    }
+
+    input[readonly] {
+      background-color: #f0f2f5;
+      cursor: not-allowed;
+      color: #65676b;
+    }
+
+    textarea {
+      resize: none;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      margin-block-start : 10px;
+      box-shadow: 0 4px 8px rgb(24 119 242 / 0.4);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #165cdb;
+      box-shadow: 0 5px 15px rgb(22 92 219 / 0.6);
+    }
+.image-preview {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.image-preview img {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #1877f2;
+  transition: transform 0.3s ease;
+  cursor: pointer; /* خليه هنا فقط */
+  -webkit-tap-highlight-color: transparent; /* يمنع اللمعة الزرقاء على الموبايل */
+}
+
+.image-preview:hover img {
+  transform: scale(1.05);
+}
+    
+-webkit-tap-highlight-color: transparent;
+    .popup-menu {
+        display: none;
+        position: absolute;
+        bottom: -80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        z-index: 10;
+        padding: 6px 0;
+        width: 180px;
+        font-size: 14px;
+    }
+
+    .popup-menu button {
+      background: none;
+      border: none;
+      color: #050505;
+      width: 100%;
+      padding: 12px 20px;
+      text-align: right;
+      cursor: pointer;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      transition: background-color 0.2s ease;
+    }
+
+    .popup-menu button:hover {
+      background: #f0f2f5;
+      color: #1877f2;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 8px;
+      font-size: 15px;
+      color: #050505;
+    }
+
+    .checkbox-container input {
+      margin-left: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #1877f2;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    li {
+      background-color: #f5f6f7;
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+      font-size: 15px;
+      color: #050505;
+    }
+
+    li strong {
+      color: #1877f2;
+    }
+
+    li small {
+      color: #65676b;
+      font-size: 13px;
+      margin-top: 6px;
+      display: block;
+      font-weight: 400;
+    }
+
+    a {
+      text-align: center;
+      display: block;
+      margin-top: 25px;
+      color: #1877f2;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      transition: text-decoration 0.3s ease;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+    .home-button {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        background: white;
+        padding: 8px;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        z-index: 1000;
+        transition: transform 0.2s ease;
+    }
+    .home-button:hover {
+        transform: scale(1.1);
+    }
+    select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 18px;
+  background-color: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%230d47a1' d='M70 90L40 60h60z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+
+select:focus {
+  border-color: #1877f2;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
+}
+optgroup {
+  font-weight: bold;
+  color: #0d47a1;
+  padding-top: 4px;
+  margin-top: 4px;
+}
+.header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      margin-bottom : 0px;
+      
+    }
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+        padding: 12px;
+        
+      }
+  </style>
+</head>
+<body>
+<div class="header">
+ملفك الشخصي
+</div>
+  
+  <div class="container">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+    
+    <form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+      <!-- ملف الصورة مخفي -->
+      <input type="file" id="image" name="image" accept="image/*" style="display:none;" onchange="this.form.submit()" />
+
+
+  
+</style>
+
+<div style="display: flex; justify-content: flex-end; padding: 15px 20px;">
+  {% if user.upgrade_status == "active" %}
+      <div style="
+          position: absolute;
+          top: 60px;
+          right: 1px;
+          background-color: #4CAF50;
+          color: white;
+          padding: 5px 8px;
+          border-radius: 10px;
+          font-size: 15px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      ">
+        ✅ {{ user.days_left }} يوم
+      </div>
+
+  {% elif user.upgrade_status == "pending" %}
+    <a href="{{ url_for('upgrade_status') }}" style="
+        position: absolute;
+        top: 35px;
+        right: 0px;
+        background-color: #FFCC00;
+        color: #333;
+        text-decoration: none;
+        padding: 5px 8px;
+        border-radius: 10px;
+        font-size: 16px;
+        display: inline-block;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    ">
+      ⏳ طلبك قيد الانتظار
+    </a>
+  {% elif user.upgrade_status == "not_upgraded" %}
+    <a href="{{ url_for('upgrade_page') }}" style="
+        background-color: #F44336;
+        position: absolute;
+        top: 35px;
+        right: 0px;
+        color: white;
+        text-decoration: none;
+        padding: 5px 8px;
+        border-radius: 10px;
+        font-size: 16px;
+        display: inline-block;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    ">
+      🚀 احصل على ترقيتك الآن
+    </a>
+  {% endif %}
+</div>
+{% set image_url = user.image_path if user.image_path else url_for('static', filename='images/default-avatar.png') %}
+<div class="image-preview">
+  <img src="{{ user.image_path if user.image_path else url_for('static', filename='images/default-avatar.png') }}" alt="الصورة الشخصية" onclick="toggleMenu(event)" />
+  <div class="popup-menu" id="popupMenu" style="display: none;">
+    {% if user.image_path %}
+    <button type="button" onclick="viewImage(event)"><i class="fa-regular fa-eye"></i> عرض الصورة</button>
+    {% endif %}
+    <button type="button" onclick="changeImage(event)"><i class="fa-solid fa-camera"></i> تغيير الصورة</button>
+  </div>
+</div>
+
+<input type="file" id="image" style="display: none;">
+
+
+
+
+
+
+  
+
+      <label for="name"><i class="fa-solid fa-user"></i> الاسم الكامل:</label>
+      <input type="text" id="name" name="name" value="{{ user.name }}" required />
+
+      <label for="phone"><i class="fa-solid fa-phone"></i> رقم الهاتف:</label>
+      <input type="text" id="phone" name="phone" value="{{ user.phone }}" readonly />
+      <div>
+<label for="show_phone">
+  <input type="checkbox" id="show_phone" name="show_phone" {% if user.show_phone %}checked{% endif %} />
+  <i class="fa-solid fa-eye"></i> إظهار رقم الهاتف للزوار
+</label>
+
+      <label for="wilaya"><i class="fa-solid fa-location-dot"></i> الولاية:</label>
+<select id="wilaya" name="wilaya" required>
+  <option value="">اختر الولاية</option>
+  {% for w in [
+    "01 - أدرار","02 - الشلف","03 - الأغواط","04 - أم البواقي","05 - باتنة","06 - بجاية","07 - بسكرة","08 - بشار",
+    "09 - البليدة","10 - البويرة","11 - تمنراست","12 - تبسة","13 - تلمسان","14 - تيارت","15 - تيزي وزو","16 - الجزائر",
+    "17 - الجلفة","18 - جيجل","19 - سطيف","20 - سعيدة","21 - سكيكدة","22 - سيدي بلعباس","23 - عنابة","24 - قالمة",
+    "25 - قسنطينة","26 - المدية","27 - مستغانم","28 - المسيلة","29 - معسكر","30 - ورقلة","31 - وهران","32 - البيض",
+    "33 - إليزي","34 - برج بوعريريج","35 - بومرداس","36 - الطارف","37 - تندوف","38 - تيسمسيلت","39 - الوادي",
+    "40 - خنشلة","41 - سوق أهراس","42 - تيبازة","43 - ميلة","44 - عين الدفلى","45 - النعامة","46 - عين تموشنت",
+    "47 - غرداية","48 - غليزان","49 - تميمون","50 - برج باجي مختار","51 - أولاد جلال","52 - بني عباس",
+    "53 - عين صالح","54 - عين قزام","55 - تقرت","56 - جانت","57 - المغير","58 - إن صالح"
+  ] %}
+    <option value="{{ w }}" {% if user.wilaya == w %}selected{% endif %}>{{ w }}</option>
+  {% endfor %}
+</select>
+<label for="service_type"><i class="fa-solid fa-wrench"></i> نوع الخدمة:</label>
+<select id="service_type" name="service_type" required>
+  <option value="">اختر نوع الخدمة</option>
+  <option value="مستخدم عادي" {% if user.service_type == 'مستخدم عادي' %}selected{% endif %}>مستخدم عادي (لا يقدم خدمات)</option>
+
+  <optgroup label="🚚 خدمات النقل والخدمات اللوجستية">
+    <option value="نقل البضائع" {% if user.service_type == 'نقل البضائع' %}selected{% endif %}>نقل البضائع</option>
+    <!-- باقي الخيارات -->
+
+    <option value="نقل الأثاث" {% if user.service_type == 'نقل الأثاث' %}selected{% endif %}>نقل الأثاث</option>
+    <option value="نقل المسافرين" {% if user.service_type == 'نقل المسافرين' %}selected{% endif %}>نقل المسافرين</option>
+    <option value="توصيل الطلبات" {% if user.service_type == 'توصيل الطلبات' %}selected{% endif %}>توصيل الطلبات</option>
+    <option value="خدمة التاكسي" {% if user.service_type == 'خدمة التاكسي' %}selected{% endif %}>خدمة التاكسي</option>
+    <option value="سائق خاص" {% if user.service_type == 'سائق خاص' %}selected{% endif %}>سائق خاص</option>
+    <option value="نقل طلاب" {% if user.service_type == 'نقل طلاب' %}selected{% endif %}>نقل طلاب</option>
+    <option value="كراء سيارات" {% if user.service_type == 'كراء سيارات' %}selected{% endif %}>كراء سيارات</option>
+    <option value="شحن داخلي" {% if user.service_type == 'شحن داخلي' %}selected{% endif %}>شحن داخلي</option>
+    <option value="شحن دولي" {% if user.service_type == 'شحن دولي' %}selected{% endif %}>شحن دولي</option>
+  </optgroup>
+
+  <optgroup label="🛠️ الحِرَف والصيانة">
+    <option value="ميكانيك سيارات" {% if user.service_type == 'ميكانيك سيارات' %}selected{% endif %}>ميكانيك سيارات</option>
+    <option value="كهربائي سيارات" {% if user.service_type == 'كهربائي سيارات' %}selected{% endif %}>كهربائي سيارات</option>
+    <option value="حدادة" {% if user.service_type == 'حدادة' %}selected{% endif %}>حدادة</option>
+    <option value="نجارة" {% if user.service_type == 'نجارة' %}selected{% endif %}>نجارة</option>
+    <option value="صيانة كهربائية" {% if user.service_type == 'صيانة كهربائية' %}selected{% endif %}>صيانة كهربائية</option>
+    <option value="سباكة" {% if user.service_type == 'سباكة' %}selected{% endif %}>سباكة</option>
+    <option value="تركيب كاميرات المراقبة" {% if user.service_type == 'تركيب كاميرات المراقبة' %}selected{% endif %}>تركيب كاميرات المراقبة</option>
+    <option value="صيانة أجهزة إلكترونية" {% if user.service_type == 'صيانة أجهزة إلكترونية' %}selected{% endif %}>صيانة أجهزة إلكترونية</option>
+    <option value="تركيب الألمنيوم والزجاج" {% if user.service_type == 'تركيب الألمنيوم والزجاج' %}selected{% endif %}>تركيب الألمنيوم والزجاج</option>
+    <option value="تصليح الهواتف" {% if user.service_type == 'تصليح الهواتف' %}selected{% endif %}>تصليح الهواتف</option>
+    <option value="صيانة الأجهزة المنزلية" {% if user.service_type == 'صيانة الأجهزة المنزلية' %}selected{% endif %}>صيانة الأجهزة المنزلية</option>
+    <option value="تكييف وتبريد" {% if user.service_type == 'تكييف وتبريد' %}selected{% endif %}>تكييف وتبريد</option>
+    <option value="صيانة المصاعد" {% if user.service_type == 'صيانة المصاعد' %}selected{% endif %}>صيانة المصاعد</option>
+    <option value="صيانة الدراجات النارية" {% if user.service_type == 'صيانة الدراجات النارية' %}selected{% endif %}>صيانة الدراجات النارية</option>
+  </optgroup>
+
+  <optgroup label="💻 خدمات رقمية وتقنية">
+    <option value="برمجة مواقع" {% if user.service_type == 'برمجة مواقع' %}selected{% endif %}>برمجة مواقع</option>
+    <option value="برمجة تطبيقات" {% if user.service_type == 'برمجة تطبيقات' %}selected{% endif %}>برمجة تطبيقات</option>
+    <option value="تصميم غرافيك" {% if user.service_type == 'تصميم غرافيك' %}selected{% endif %}>تصميم غرافيك</option>
+    <option value="مونتاج فيديو" {% if user.service_type == 'مونتاج فيديو' %}selected{% endif %}>مونتاج فيديو</option>
+    <option value="تحرير صوت" {% if user.service_type == 'تحرير صوت' %}selected{% endif %}>تحرير صوت</option>
+    <option value="تصميم إعلانات" {% if user.service_type == 'تصميم إعلانات' %}selected{% endif %}>تصميم إعلانات</option>
+    <option value="تسويق رقمي" {% if user.service_type == 'تسويق رقمي' %}selected{% endif %}>تسويق رقمي</option>
+    <option value="تصميم ألعاب" {% if user.service_type == 'تصميم ألعاب' %}selected{% endif %}>تصميم ألعاب</option>
+    <option value="تصميم واجهات المستخدم" {% if user.service_type == 'تصميم واجهات المستخدم' %}selected{% endif %}>تصميم واجهات المستخدم</option>
+    <option value="تحليل بيانات" {% if user.service_type == 'تحليل بيانات' %}selected{% endif %}>تحليل بيانات</option>
+    <option value="إدارة منصات تواصل" {% if user.service_type == 'إدارة منصات تواصل' %}selected{% endif %}>إدارة منصات تواصل</option>
+    <option value="خدمات SEO" {% if user.service_type == 'خدمات SEO' %}selected{% endif %}>خدمات SEO</option>
+  </optgroup>
+
+  <optgroup label="🎓 التعليم والتدريب">
+    <option value="تدريس خصوصي" {% if user.service_type == 'تدريس خصوصي' %}selected{% endif %}>تدريس خصوصي</option>
+    <option value="دروس دعم ابتدائي" {% if user.service_type == 'دروس دعم ابتدائي' %}selected{% endif %}>دروس دعم ابتدائي</option>
+    <option value="دروس دعم ثانوي" {% if user.service_type == 'دروس دعم ثانوي' %}selected{% endif %}>دروس دعم ثانوي</option>
+    <option value="تعليم لغات" {% if user.service_type == 'تعليم لغات' %}selected{% endif %}>تعليم لغات</option>
+    <option value="تحفيظ قرآن" {% if user.service_type == 'تحفيظ قرآن' %}selected{% endif %}>تحفيظ قرآن</option>
+    <option value="تدريب حاسوب" {% if user.service_type == 'تدريب حاسوب' %}selected{% endif %}>تدريب حاسوب</option>
+    <option value="كورسات برمجة" {% if user.service_type == 'كورسات برمجة' %}selected{% endif %}>كورسات برمجة</option>
+    <option value="كورسات فوتوشوب" {% if user.service_type == 'كورسات فوتوشوب' %}selected{% endif %}>كورسات فوتوشوب</option>
+    <option value="كورسات تسويق" {% if user.service_type == 'كورسات تسويق' %}selected{% endif %}>كورسات تسويق</option>
+    <option value="كورسات تصميم" {% if user.service_type == 'كورسات تصميم' %}selected{% endif %}>كورسات تصميم</option>
+  </optgroup>
+
+  <optgroup label="🧼 خدمات منزلية">
+    <option value="تنظيف منازل" {% if user.service_type == 'تنظيف منازل' %}selected{% endif %}>تنظيف منازل</option>
+    <option value="تنظيف مكاتب" {% if user.service_type == 'تنظيف مكاتب' %}selected{% endif %}>تنظيف مكاتب</option>
+    <option value="طهي منزلي" {% if user.service_type == 'طهي منزلي' %}selected{% endif %}>طهي منزلي</option>
+    <option value="رعاية أطفال" {% if user.service_type == 'رعاية أطفال' %}selected{% endif %}>رعاية أطفال</option>
+    <option value="مساعدة منزلية" {% if user.service_type == 'مساعدة منزلية' %}selected{% endif %}>مساعدة منزلية</option>
+    <option value="غسيل سيارات متنقل" {% if user.service_type == 'غسيل سيارات متنقل' %}selected{% endif %}>غسيل سيارات متنقل</option>
+    <option value="تزيين مناسبات" {% if user.service_type == 'تزيين مناسبات' %}selected{% endif %}>تزيين مناسبات</option>
+  </optgroup>
+
+  <optgroup label="🎨 فنون ومناسبات">
+    <option value="تصوير مناسبات" {% if user.service_type == 'تصوير مناسبات' %}selected{% endif %}>تصوير مناسبات</option>
+    <option value="تصوير منتجات" {% if user.service_type == 'تصوير منتجات' %}selected{% endif %}>تصوير منتجات</option>
+    <option value="تنظيم حفلات" {% if user.service_type == 'تنظيم حفلات' %}selected{% endif %}>تنظيم حفلات</option>
+    <option value="خدمة DJ" {% if user.service_type == 'خدمة DJ' %}selected{% endif %}>خدمة DJ</option>
+    <option value="مؤثرات صوتية وضوئية" {% if user.service_type == 'مؤثرات صوتية وضوئية' %}selected{% endif %}>مؤثرات صوتية وضوئية</option>
+    <option value="رسم على الجدران" {% if user.service_type == 'رسم على الجدران' %}selected{% endif %}>رسم على الجدران</option>
+    <option value="كاريكاتير وشعارات" {% if user.service_type == 'كاريكاتير وشعارات' %}selected{% endif %}>كاريكاتير وشعارات</option>
+  </optgroup>
+
+  <optgroup label="🧑‍⚕️ الصحة والجمال">
+    <option value="حلاقة رجالية" {% if user.service_type == 'حلاقة رجالية' %}selected{% endif %}>حلاقة رجالية</option>
+    <option value="حلاقة نسائية" {% if user.service_type == 'حلاقة نسائية' %}selected{% endif %}>حلاقة نسائية</option>
+    <option value="تجميل ومكياج" {% if user.service_type == 'تجميل ومكياج' %}selected{% endif %}>تجميل ومكياج</option>
+    <option value="علاج طبيعي" {% if user.service_type == 'علاج طبيعي' %}selected{% endif %}>علاج طبيعي</option>
+    <option value="خدمة تدليك" {% if user.service_type == 'خدمة تدليك' %}selected{% endif %}>خدمة تدليك</option>
+    <option value="تصفيف الشعر" {% if user.service_type == 'تصفيف الشعر' %}selected{% endif %}>تصفيف الشعر</option>
+  </optgroup>
+
+  <optgroup label="📝 خدمات مكتبية وإدارية">
+    <option value="كتابة سيرة ذاتية" {% if user.service_type == 'كتابة سيرة ذاتية' %}selected{% endif %}>كتابة سيرة ذاتية</option>
+    <option value="ترجمة نصوص" {% if user.service_type == 'ترجمة نصوص' %}selected{% endif %}>ترجمة نصوص</option>
+    <option value="كتابة تقارير" {% if user.service_type == 'كتابة تقارير' %}selected{% endif %}>كتابة تقارير</option>
+    <option value="خدمات قانونية" {% if user.service_type == 'خدمات قانونية' %}selected{% endif %}>خدمات قانونية</option>
+    <option value="استشارات محاسبية" {% if user.service_type == 'استشارات محاسبية' %}selected{% endif %}>استشارات محاسبية</option>
+    <option value="إدخال بيانات" {% if user.service_type == 'إدخال بيانات' %}selected{% endif %}>إدخال بيانات</option>
+    <option value="تحرير محتوى" {% if user.service_type == 'تحرير محتوى' %}selected{% endif %}>تحرير محتوى</option>
+    <option value="تصميم عروض PowerPoint" {% if user.service_type == 'تصميم عروض PowerPoint' %}selected{% endif %}>تصميم عروض PowerPoint</option>
+  </optgroup>
+
+  <optgroup label="🛍️ خدمات تجارية وتسويقية">
+    <option value="بيع منتجات محلية" {% if user.service_type == 'بيع منتجات محلية' %}selected{% endif %}>بيع منتجات محلية</option>
+    <option value="توصيل الطلبات المنزلية" {% if user.service_type == 'توصيل الطلبات المنزلية' %}selected{% endif %}>توصيل الطلبات المنزلية</option>
+    <option value="خدمة بيع أونلاين" {% if user.service_type == 'خدمة بيع أونلاين' %}selected{% endif %}>خدمة بيع أونلاين</option>
+    <option value="تسويق شبكي" {% if user.service_type == 'تسويق شبكي' %}selected{% endif %}>تسويق شبكي</option>
+    <option value="موزع منتجات" {% if user.service_type == 'موزع منتجات' %}selected{% endif %}>موزع منتجات</option>
+    <option value="ممثل تجاري" {% if user.service_type == 'ممثل تجاري' %}selected{% endif %}>ممثل تجاري</option>
+  </optgroup>
+
+</select>
+      <label for="description"><i class="fa-regular fa-pen-to-square"></i> وصف الخدمة:</label>
+      <textarea id="description" name="description" rows="3">{{ user.description }}</textarea>
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="is_available" name="is_available" {% if user.is_available %}checked{% endif %} />
+        <label for="is_available"><i class="fa-solid fa-check"></i> أنا متاح الآن</label>
+      </div>
+
+
+      <button type="submit"><i class="fa-solid fa-floppy-disk"></i> حفظ التغييرات</button>
+    </form>
+
+    <hr style="border-color:#ddd; margin: 30px 0;">
+
+    
+
+
+  </div>
+  <a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+</a>
+
+  <script>
+  function toggleMenu(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('popupMenu');
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+  }
+
+  function viewImage(event) {
+    event.stopPropagation();
+    const imageUrl = "{{ user.image_path if user.image_path else url_for('static', filename='images/default-avatar.png') }}";
+    window.open(imageUrl, '_blank');
+  }
+
+  function changeImage(event) {
+    event.stopPropagation();
+    document.getElementById('image').click();
+  }
+
+  // غلق القائمة بالضغط خارجها
+  document.addEventListener('click', function () {
+    const menu = document.getElementById('popupMenu');
+    if (menu) menu.style.display = 'none';
+  });
+
+
+    setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.transition = 'opacity 0.5s ease';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500); // نحذف العنصر بعد انتهاء التحول
+    });
+  }, 3000); // 3 ثواني
+  </script>
+</body>
+</html>

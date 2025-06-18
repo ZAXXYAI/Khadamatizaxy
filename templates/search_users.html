@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>البحث عن المستخدمين</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+      padding: 15px;
+    }
+
+    h2 {
+      color: #008080;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 100%;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    input[type="text"], select {
+      padding: 10px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px;
+      width: 100%;
+      background-color: #008080;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .results {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .user-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      width: 90%;
+      max-width: 300px;
+      text-align: center;
+    }
+
+    .user-card img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 3px solid #008080;
+    }
+
+    .user-card a {
+      font-weight: bold;
+      font-size: 18px;
+      color: #008080;
+      text-decoration: none;
+    }
+
+    .user-card p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .no-results {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-btn {
+      display: block;
+      margin: 30px auto 0;
+      padding: 10px 25px;
+      background-color: #ccc;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔍 البحث عن المستخدمين</h2>
+
+{% if not query and wilaya == 'all' and (not gender or gender == 'الكل') %}
+<form method="get" action="{{ url_for('search_users') }}">
+  <input type="text" name="query" placeholder="الاسم أو الهاتف أو الإيميل" value="{{ query }}">
+
+  <select name="wilaya">
+    <option value="">اختر الولاية</option>
+    <option value="all">كل الولايات</option>
+    {% for w in [
+      "01 - أدرار", "02 - الشلف", "03 - الأغواط", "04 - أم البواقي", "05 - باتنة", "06 - بجاية", "07 - بسكرة", "08 - بشار", "09 - البليدة", "10 - البويرة",
+      "11 - تمنراست", "12 - تبسة", "13 - تلمسان", "14 - تيارت", "15 - تيزي وزو", "16 - الجزائر", "17 - الجلفة", "18 - جيجل", "19 - سطيف", "20 - سعيدة",
+      "21 - سكيكدة", "22 - سيدي بلعباس", "23 - عنابة", "24 - قالمة", "25 - قسنطينة", "26 - المدية", "27 - مستغانم", "28 - المسيلة", "29 - معسكر", "30 - ورقلة",
+      "31 - وهران", "32 - البيض", "33 - إليزي", "34 - برج بوعريريج", "35 - بومرداس", "36 - الطارف", "37 - تندوف", "38 - تيسمسيلت", "39 - الوادي", "40 - خنشلة",
+      "41 - سوق أهراس", "42 - تيبازة", "43 - ميلة", "44 - عين الدفلى", "45 - النعامة", "46 - عين تموشنت", "47 - غرداية", "48 - غليزان", "49 - تميمون", 
+      "50 - برج باجي مختار", "51 - أولاد جلال", "52 - بني عباس", "53 - عين صالح", "54 - عين قزام", "55 - تقرت", "56 - جانت", "57 - المغير", "58 - إن صالح"
+    ] %}
+      <option value="{{ w }}" {% if wilaya == w %}selected{% endif %}>{{ w }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="gender">
+    <option value="الكل" {% if gender == 'الكل' %}selected{% endif %}>الكل</option>
+    <option value="ذكر" {% if gender == 'ذكر' %}selected{% endif %}>ذكر</option>
+    <option value="أنثى" {% if gender == 'أنثى' %}selected{% endif %}>أنثى</option>
+  </select>
+
+  <button type="submit">🔍 بحث</button>
+</form>
+{% endif %}
+
+{% if query or wilaya != 'all' or (gender and gender != 'الكل') %}
+  <div class="results">
+    {% if users and users|length > 0 %}
+      {% for user in users %}
+        <div class="user-card">
+          <img src="{{ url_for('static', filename=user.image_path or 'default.jpg') }}" alt="User Image">
+          <a href="{{ url_for('public_profile', user_id=user.id) }}">{{ user.name }}</a>
+          <p>{{ user.wilaya }} - {{ user.gender }}</p>
+          <p><strong>الخدمة:</strong> {{ user.service_type }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-results">🚫 لا توجد حسابات تطابق البحث</p>
+    {% endif %}
+  </div>
+
+  <a href="{{ url_for('search_users') }}" class="back-btn">🔁 بحث جديد</a>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>طلبات الصداقة - Zaxxy</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }.home-button {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: white;
+            padding: 8px;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+        .home-button:hover {
+            transform: scale(1.1);
+        }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      font-family: 'Cairo', sans-serif;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #1c1e21;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 15px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #d8d8d8;
+      flex-shrink: 0;
+    }
+
+    .name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1877f2;
+    }
+
+    .details p {
+      margin: 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn.accept {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn.accept:hover {
+      background-color: #218838;
+    }
+
+    .btn.reject {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn.reject:hover {
+      background-color: #c82333;
+    }
+
+    .no-requests {
+      text-align: center;
+      color: #777;
+      padding: 30px 0;
+      font-size: 15px;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #1877f2;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+
+<div class="header">
+  طلبات الصداقة
+</div>
+
+{% if friend_requests %}
+    {% for request in friend_requests %}
+        <div class="card" data-id="{{ request.id }}" style="position: relative;">
+            <!-- أيقونة الهاتف فقط -->
+            <div style="position: absolute; top: 8px; left: 8px;">
+    {% if request.show_phone %}
+        <a href="tel:{{ request.phone }}" class="friend-link" title="اتصال">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="#28a745" viewBox="0 0 512 512">
+                <path d="M391 351l-79.6-34c-8.1-3.5-17.5-1.3-23.6 5.4l-30.1 32.4c-49.2-25.4-89.2-65.4-114.6-114.6l32.4-30.1c6.7-6.1 8.9-15.5 5.4-23.6L161 121c-3.9-9.1-13.2-14.8-23-13.2l-64 10.7c-9.6 1.6-16.7 9.9-16.7 19.6 0 191.7 155.3 347 347 347 9.7 0 18-7.1 19.6-16.7l10.7-64c1.6-9.8-4.1-19.1-13.2-23z"/>
+            </svg>
+        </a>
+    {% else %}
+        <span title="رقم الهاتف غير متاح">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="#999" viewBox="0 0 640 512">
+                <path d="M633.8 458.1L23 5.1C15.6-.6 5.6-.6-1.8 5.1S-6.6 20.4 .8 27.7l610.8 453c7.4 5.5 17.4 5.5 24.8 0s7.4-15.1 0-20.6zM497.1 361.2l-61.4-45.5c-8.1-6-19.1-4.9-26.2 2.6l-33.7 35.7c-49.4-26-90.5-67.2-116.5-116.5l35.7-33.7c7.5-7.1 8.6-18.1 2.6-26.2l-45.5-61.4c-5.7-7.6-15.3-11-24.2-8.3l-64 16c-8.4 2.1-14.5 9.6-14.5 18.2 0 198.8 161.2 360 360 360 8.6 0 16.1-6.1 18.2-14.5l16-64c2.7-8.9-.7-18.5-8.3-24.2z"/>
+            </svg>
+        </span>
+    {% endif %}
+</div>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: 20px;">
+    {% set image_path = request.image_path.replace('/static/', '') if request.image_path else 'default-avatar.png' %}
+    <img src="{{ url_for('static', filename=image_path) }}" 
+         alt="صورة {{ request.name }}" 
+         width="50" height="50"
+         style="border-radius: 50%; object-fit: cover;">
+    
+    <span class="friend-name">
+        <a href="{{ url_for('public_profile', user_id=request.sender_id) }}">
+            {{ request.name }}
+        </a>
+    </span>
+</div>
+            <div class="details">
+                
+                <p>نوع الخدمة: {{ request.service_type }}</p>
+                <small><p>تاريخ الإرسال: <span>{{ request.date_sent | datetimeformat }}</span></p>
+                </small>
+            </div>
+            <div class="buttons">
+                <button class="btn accept" onclick="acceptFriendRequest({{ request.id }})">قبول</button>
+                <button class="btn reject" onclick="rejectFriendRequest({{ request.id }})">رفض</button>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="no-requests">لا توجد طلبات صداقة حالياً</div>
+{% endif %}
+
+  <a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+    
+</a>
+<script>
+  async function acceptFriendRequest(id) {
+    try {
+      const response = await fetch('/accept_friend_request/' + id, { method: 'POST' });
+      const data = await response.json();
+      if (data.success) {
+        alert('تم قبول طلب الصداقة بنجاح!');
+        // حذف البطاقة من الصفحة
+        document.querySelector(`[data-id='${id}']`).remove();
+        checkIfEmpty();
+      } else {
+        alert('' + data.message);
+      }
+    } catch (error) {
+      alert('حدث خطأ أثناء الاتصال بالخادم.');
+    }
+  }
+
+  async function rejectFriendRequest(id) {
+    try {
+      const response = await fetch('/reject_friend_request/' + id, { method: 'POST' });
+      const data = await response.json();
+      if (data.success) {
+        alert('تم رفض طلب الصداقة بنجاح!');
+        // حذف البطاقة من الصفحة
+        document.querySelector(`[data-id='${id}']`).remove();
+        checkIfEmpty();
+      } else {
+        alert(' ' + data.message);
+      }
+    } catch (error) {
+      alert('حدث خطأ أثناء الاتصال بالخادم.');
+    }
+  }
+
+  // إذا ما بقاش ولا طلب، نظهر رسالة "لا توجد طلبات"
+  function checkIfEmpty() {
+    const cards = document.querySelectorAll('.card');
+    if (cards.length === 0) {
+      document.querySelector('.container').innerHTML += `
+        <div class="no-requests">لا توجد طلبات صداقة حالياً</div>
+      `;
+    }
+  }
+</script>
+
+</body>
+</html>

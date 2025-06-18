@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ترقية الحساب</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .home-button {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: white;
+            padding: 8px;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+        .home-button:hover {
+            transform: scale(1.1);
+        }
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      font-size: 22px;
+      font-weight: bold;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .btn-link {
+  display: block;
+  width: 85%;
+  max-width: 330px;
+  margin: 20px auto;
+  padding: 8px 13px;
+  background-color: #00C9A7;
+  color: #black;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 17px;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-link:hover {
+  background-color: #00b49a;
+  transform: scale(1.03);
+}
+    .flash-messages {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 0 15px;
+      z-index: 1000;
+    }
+    .flash-messages .alert {
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      margin-bottom: 15px;
+      line-height: 1.5;
+      color: #fff;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    /* رسائل النجاح */
+.alert-success {
+  background: linear-gradient(to right, #1abc9c, #16a085);
+  color: #fff;
+  border-left: 6px solid #0e7c65;
+}
+
+/* رسائل الخطأ */
+.alert-danger,
+.alert-error {
+  background: linear-gradient(to right, #e74c3c, #c0392b);
+  color: #fff;
+  border-left: 6px solid #922b21;
+}
+
+/* رسائل التحذير */
+.alert-warning {
+  background: linear-gradient(to right, #f39c12, #e67e22);
+  color: #fff;
+  border-left: 6px solid #b34700;
+}
+
+/* رسائل المعلومات */
+.alert-info {
+  background: linear-gradient(to right, #3498db, #2980b9);
+  color: #fff;
+  border-left: 6px solid #1f618d;
+}
+
+/* زر الإغلاق */
+.alert .close {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.alert .close:hover {
+  transform: scale(1.2);
+}
+
+/* حركة الظهور */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <i class="fas fa-star"></i> ترقية حسابك
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+            <span class="close" onclick="this.parentElement.style.display='none'">&times;</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <a href="{{ url_for('baridimob_upgrade') }}" class="btn-link">
+    <i class="fas fa-money-bill-wave"></i> الترقية بواسطة بريدي موب
+  </a>
+
+  <a href="{{ url_for('watch_ad') }}" class="btn-link">
+    <i class="fas fa-video"></i> مشاهدة إعلان للحصول على ترقية مؤقتة
+  </a>
+
+  <a href="{{ url_for('support_team') }}" class="btn-link">
+    <i class="fas fa-headset"></i> الاتصال بفريق الدعم
+  </a>
+
+  <a href="{{ url_for('enter_upgrade_code') }}" class="btn-link">
+    <i class="fas fa-key"></i> هل لديك كود؟
+  </a>
+
+  <a href="{{ url_for('profile') }}" class="btn-link" style="background-color: white;">
+    <i class="fas fa-arrow-right"></i> 
+    الصفحة الشخصية
+  </a>
+    <a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+    
+</a>
+
+  <script>
+    // اختفاء الرسائل تلقائياً بعد 3 ثواني
+    window.addEventListener('DOMContentLoaded', () => {
+      const alerts = document.querySelectorAll('.flash-messages .alert');
+      alerts.forEach(alert => {
+        setTimeout(() => {
+          alert.style.transition = "opacity 0.5s ease-out";
+          alert.style.opacity = "0";
+          setTimeout(() => {
+            alert.remove();
+          }, 500);
+        }, 3000);
+      });
+    });
+  </script>
+
+</body>
+</html>

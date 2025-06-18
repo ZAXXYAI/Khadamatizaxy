@@ -1,0 +1,14 @@
+# إخفاء ملف Flask الرئيسي
+app.py
+
+# إخفاء ملف المتغيرات الحساسة
+.env
+
+# إخفاء قاعدة البيانات داخل مجلد database
+database/db.sqlite
+
+# إخفاء مجلدات التكوين المؤقت
+__pycache__/
+*.pyc
+instance/
+flask_session/

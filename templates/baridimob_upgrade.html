@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>إرسال معلومات Baridimob</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header {
+      background: linear-gradient(to right, #43cea2, #185a9d);
+      color: white;
+      padding: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    select {
+  
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 18px;
+  background-color: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%230d47a1' d='M70 90L40 60h60z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+
+select:focus {
+  border-color: #1877f2;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
+}
+
+
+    .subtext {
+      color: #555;
+      margin: 20px auto 10px;
+      font-size: 16px;
+      padding: 0 15px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    input[type="text"], input[type="file"] {
+      width: 90%;
+      max-width: 350px;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+    }
+
+    button {
+      background-color: #185a9d;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0f3e6b;
+    }
+
+    .price {
+      margin-top: 20px;
+      color: #0d47a1;
+      font-size: 16px;
+    }
+
+    .instructions {
+      background-color: #fff;
+      margin: 20px auto;
+      padding: 15px;
+      max-width: 90%;
+      border-radius: 12px;
+      font-size: 15px;
+      color: #444;
+      text-align: right;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .instructions i {
+      color: #1877f2;
+      margin-left: 5px;
+    }
+
+    @media (max-width: 480px) {
+      input, button {
+        width: 90%;
+      }
+    }
+    .copy-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.copy-btn:hover {
+  background-color: #0056b3;
+}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <i class="fas fa-money-check-alt"></i> إرسال معلومات Baridimob
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% if message %}
+  <div class="flash {{ message_type }}">{{ message }}</div>
+{% endif %}
+
+<div class="subtext">
+  <i class="fas fa-info-circle"></i> قم بإرسال معلومات الدفع لتفعيل الترقية يدويًا.
+</div>
+
+<div class="confirmation-note" style="margin: 10px 0; background-color: #e0f7e9; padding: 10px; border: 1px solid #b2dfdb; border-radius: 5px;">
+  ✅ بعد وصول المبلغ والتحقق من <strong>رقم المرجع</strong>، سيتم ترقيتك فورًا.
+</div>
+
+<div class="instructions">
+  <strong><i class="fas fa-book"></i> شرح مبسط:</strong>
+  <ul>
+    <li><i class="fas fa-circle"></i> إذا كان عندك تطبيق <strong>Baridimob</strong>:
+      <ul>
+        <li>افتح التطبيق واختر <strong> التحويلات
+ (Virement)</strong>.</li>
+        <li>أدخل رقم الحساب 👇 وارسِل المبلغ.</li>
+        <li> خذ لقطة شاشة أو صورة  تحتوي على رقم المرجع بعد نجاح التحويل.</li>
+        
+      </ul>
+    </li>
+    <li><i class="fas fa-circle"></i> 
+اذا ما عندك تطبيق BaridiMob :
+      <ul>
+        <li>روح لمكتب <strong>البوسطة</strong>.</li>
+        <li>اطلب تحويل نفس المبلغ إلى رقم الحساب أدناه.</li>
+        <li>صور وثيقة البيان اللي يعطوهالك.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- رقم الحساب + زر نسخ -->
+
+    <strong>📬 رقم الحساب:</strong> <span id="account-number">00799999004018668981</span>
+  </div>
+  <button onclick="copyAccountNumber()" title="نسخ" class="copy-btn">
+  <i class="fas fa-copy"></i>
+</button>
+</div>
+
+<form action="{{ url_for('submit_payment') }}" method="POST" enctype="multipart/form-data">
+  <!-- رقم الهاتف -->
+  <input type="hidden" name="email_or_phone" value="{{ session.get('phone') }}">
+
+  <!-- اختيار المدة -->
+  <label for="note">📅 اختر المدة:</label><br>
+  <select name="note" id="note" required>
+    <option value="">
+اختر مدة الترقية
+</option>
+    <option value="شهر واحد (750 دج)">شهر واحد (750 دج)</option>
+    <option value="سنة كاملة (8000 دج)">سنة كاملة (8000 دج)</option>
+  </select><br><br>
+
+
+  <!-- صورة التحويل -->
+  <label for="payment_image">📷 صورة التحويل:</label><br>
+  <input 
+    type="file"
+    name="payment_image"
+    id="payment_image"
+    accept="image/*"
+    required
+  ><br><br>
+
+  <!-- إرسال -->
+  <button type="submit">
+    <i class="fas fa-paper-plane"></i> إرسال معلومات التحويل
+  </button>
+</form>
+<a href="{{ url_for('upgrade_page') }}" 
+   style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 40px; margin-top:10px;  font-weight: bold;">
+  ⬅️ العودة
+</a>
+<script>
+  function copyAccountNumber() {
+    const number = document.getElementById("account-number").innerText;
+    navigator.clipboard.writeText(number).then(() => {
+      alert("✅ تم نسخ رقم الحساب");
+    });
+  }
+</script>
+
+<div class="price">
+  💰 السعر: <strong>750 دج / شهر</strong> أو <strong>8000 دج / سنة</strong>
+</div>
+</html>

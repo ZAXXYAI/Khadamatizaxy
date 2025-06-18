@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8" />
+<!-- منع الزوم (تكبير الصفحة) -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>بحث عن العمال - Zaxxy</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+  body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    padding: 0px;
+    
+    direction: rtl;
+    background: #f9f9f9;
+    color: #333;
+  }
+  .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      margin-bottom : 20px;
+    }
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+        padding: 12px;
+      }
+
+  h1 {
+    text-align: center;
+    margin: 25px 0 15px;
+    color: #0d47a1;
+  }
+
+  form {
+    max-width: 500px;
+    margin: 0 auto 30px;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    font-family: 'Cairo', sans-serif;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #0d47a1;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 18px;
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  input[type="text"]:focus {
+    border-color: #1877f2;
+    outline: none;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    font-size: 18px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  button[type="submit"]:hover {
+    background: #0d47a1;
+  }
+
+  /* نتائج البحث */
+  h2 {
+    margin-bottom: 15px;
+    text-align: center;
+    color: #0d47a1;
+  }
+
+  .results-container {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    
+  }
+
+  .results-list {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .results-list::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .results-list::-webkit-scrollbar-thumb {
+    background-color: #1877f2;
+    border-radius: 6px;
+    
+  }
+
+  .worker-card {
+    background: white;
+    border-radius: 40px;
+    min-width: 280px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 18px 22px;
+  }
+
+  .worker-card img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1877f2;
+    margin-bottom: 12px;
+    
+  }
+  .home-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: white;
+    padding: 8px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: transform 0.2s ease;
+  }
+  .home-button:hover {
+    transform: scale(1.1);
+  }
+
+  /* الاسم الآن رابط لصفحة البروفايل */
+  .worker-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0d47a1;
+    margin-bottom: 4px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .worker-name a {
+    color: #0d47a1;
+    text-decoration: none;
+  }
+
+  .worker-name a:hover {
+    text-decoration: underline;
+  }
+
+  .worker-service {
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 2px;
+  }
+
+  .worker-wilaya {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 8px;
+  }
+  select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 18px;
+  font-family: 'Cairo', sans-serif;
+  background-color: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%230d47a1' d='M70 90L40 60h60z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+
+select:focus {
+  border-color: #1877f2;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
+  font-family: 'Cairo', sans-serif;
+}
+optgroup {
+  font-weight: bold;
+  color: #0d47a1;
+  padding-top: 4px;
+  margin-top: 4px;
+}
+option {
+  color: #333;
+  padding: 4px 8px;
+}
+
+  .worker-description {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 12px;
+    min-height: 40px;
+  }
+
+  .availability {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .available {
+    color: #28a745;
+  }
+
+  .not-available {
+    color: #dc3545;
+  }
+
+  .rating {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .rating i {
+    color: #ffc107;
+  }
+
+  /* أزرار الاتصال والدردشة */
+  .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .actions button,
+  .actions a {
+    text-decoration: none;
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    font-weight: 600;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .actions button:hover,
+  .actions a:hover {
+    background: #0d47a1;
+  }
+
+  /* روابط */
+  a {
+    color: #1877f2;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* العودة للصفحة الرئيسية */
+  .back-home {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .results-list {
+      gap: 12px;
+    }
+
+    .worker-card {
+      min-width: 240px;
+      padding: 15px 18px;
+    }
+
+    .worker-name {
+      font-size: 18px;
+    }
+
+    .worker-service {
+      font-size: 15px;
+    }
+  }
+
+  /* صفحة البروفايل */
+  .profile-container {
+    max-width: 500px;
+    margin: 20px auto 40px;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    direction: rtl;
+    text-align: center;
+  }
+
+  .profile-container img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #1877f2;
+    margin-bottom: 15px;
+  }
+
+  .profile-container h2 {
+    color: #0d47a1;
+    margin-bottom: 10px;
+  }
+
+  .profile-info {
+    text-align: right;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #444;
+  }
+
+  .profile-info strong {
+    color: #0d47a1;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  بحث عن عمال 
+  </div>
+<form action="{{ url_for('search') }}" method="POST" autocomplete="off">
+
+  <label for="service_type">نوع الخدمة:</label>
+  <select id="service_type" name="service_type" required>
+    <option value="">اختر نوع الخدمة</option>
+
+<optgroup label="🚚 خدمات النقل والخدمات اللوجستية">
+  <option value="نقل البضائع">نقل البضائع</option>
+  <option value="نقل الأثاث">نقل الأثاث</option>
+  <option value="نقل المسافرين">نقل المسافرين</option>
+  <option value="توصيل الطلبات">توصيل الطلبات</option>
+  <option value="خدمة التاكسي">خدمة التاكسي</option>
+  <option value="سائق خاص">سائق خاص</option>
+  <option value="نقل طلاب">نقل طلاب</option>
+  <option value="كراء سيارات">كراء سيارات</option>
+  <option value="شحن داخلي">شحن داخلي</option>
+  <option value="شحن دولي">شحن دولي</option>
+</optgroup>
+
+<optgroup label="🛠️ الحِرَف والصيانة">
+  <option value="ميكانيك سيارات">ميكانيك سيارات</option>
+  <option value="كهربائي سيارات">كهربائي سيارات</option>
+  <option value="حدادة">حدادة</option>
+  <option value="نجارة">نجارة</option>
+  <option value="صيانة كهربائية">صيانة كهربائية</option>
+  <option value="سباكة">سباكة</option>
+  <option value="تركيب كاميرات المراقبة">تركيب كاميرات المراقبة</option>
+  <option value="صيانة أجهزة إلكترونية">صيانة أجهزة إلكترونية</option>
+  <option value="تركيب الألمنيوم والزجاج">تركيب الألمنيوم والزجاج</option>
+  <option value="تصليح الهواتف">تصليح الهواتف</option>
+  <option value="صيانة الأجهزة المنزلية">صيانة الأجهزة المنزلية</option>
+  <option value="تكييف وتبريد">تكييف وتبريد</option>
+  <option value="صيانة المصاعد">صيانة المصاعد</option>
+  <option value="صيانة الدراجات النارية">صيانة الدراجات النارية</option>
+</optgroup>
+
+<optgroup label="💻 خدمات رقمية وتقنية">
+  <option value="برمجة مواقع">برمجة مواقع</option>
+  <option value="برمجة تطبيقات">برمجة تطبيقات</option>
+  <option value="تصميم غرافيك">تصميم غرافيك</option>
+  <option value="مونتاج فيديو">مونتاج فيديو</option>
+  <option value="تحرير صوت">تحرير صوت</option>
+  <option value="تصميم إعلانات">تصميم إعلانات</option>
+  <option value="تسويق رقمي">تسويق رقمي</option>
+  <option value="تصميم ألعاب">تصميم ألعاب</option>
+  <option value="تصميم واجهات المستخدم">تصميم واجهات المستخدم</option>
+  <option value="تحليل بيانات">تحليل بيانات</option>
+  <option value="إدارة منصات تواصل">إدارة منصات تواصل</option>
+  <option value="خدمات SEO">خدمات SEO</option>
+</optgroup>
+
+<optgroup label="🎓 التعليم والتدريب">
+  <option value="تدريس خصوصي">تدريس خصوصي</option>
+  <option value="دروس دعم ابتدائي">دروس دعم ابتدائي</option>
+  <option value="دروس دعم ثانوي">دروس دعم ثانوي</option>
+  <option value="تعليم لغات">تعليم لغات</option>
+  <option value="تحفيظ قرآن">تحفيظ قرآن</option>
+  <option value="تدريب حاسوب">تدريب حاسوب</option>
+  <option value="كورسات برمجة">كورسات برمجة</option>
+  <option value="كورسات فوتوشوب">كورسات فوتوشوب</option>
+  <option value="كورسات تسويق">كورسات تسويق</option>
+  <option value="كورسات تصميم">كورسات تصميم</option>
+</optgroup>
+
+<optgroup label="🧼 خدمات منزلية">
+  <option value="تنظيف منازل">تنظيف منازل</option>
+  <option value="تنظيف مكاتب">تنظيف مكاتب</option>
+  <option value="طهي منزلي">طهي منزلي</option>
+  <option value="رعاية أطفال">رعاية أطفال</option>
+  <option value="مساعدة منزلية">مساعدة منزلية</option>
+  <option value="غسيل سيارات متنقل">غسيل سيارات متنقل</option>
+  <option value="تزيين مناسبات">تزيين مناسبات</option>
+</optgroup>
+
+<optgroup label="🎨 فنون ومناسبات">
+  <option value="تصوير مناسبات">تصوير مناسبات</option>
+  <option value="تصوير منتجات">تصوير منتجات</option>
+  <option value="تنظيم حفلات">تنظيم حفلات</option>
+  <option value="خدمة DJ">خدمة DJ</option>
+  <option value="مؤثرات صوتية وضوئية">مؤثرات صوتية وضوئية</option>
+  <option value="رسم على الجدران">رسم على الجدران</option>
+  <option value="كاريكاتير وشعارات">كاريكاتير وشعارات</option>
+</optgroup>
+
+<optgroup label="🧑‍⚕️ الصحة والجمال">
+  <option value="حلاقة رجالية">حلاقة رجالية</option>
+  <option value="حلاقة نسائية">حلاقة نسائية</option>
+  <option value="تجميل ومكياج">تجميل ومكياج</option>
+  <option value="علاج طبيعي">علاج طبيعي</option>
+  <option value="خدمة تدليك">خدمة تدليك</option>
+  <option value="تصفيف الشعر">تصفيف الشعر</option>
+</optgroup>
+
+<optgroup label="📝 خدمات مكتبية وإدارية">
+  <option value="كتابة سيرة ذاتية">كتابة سيرة ذاتية</option>
+  <option value="ترجمة نصوص">ترجمة نصوص</option>
+  <option value="كتابة تقارير">كتابة تقارير</option>
+  <option value="خدمات قانونية">خدمات قانونية</option>
+  <option value="استشارات محاسبية">استشارات محاسبية</option>
+  <option value="إدخال بيانات">إدخال بيانات</option>
+  <option value="تحرير محتوى">تحرير محتوى</option>
+  <option value="تصميم عروض PowerPoint">تصميم عروض PowerPoint</option>
+</optgroup>
+
+<optgroup label="🛍️ خدمات تجارية وتسويقية">
+  <option value="بيع منتجات محلية">بيع منتجات محلية</option>
+  <option value="توصيل الطلبات المنزلية">توصيل الطلبات المنزلية</option>
+  <option value="خدمة بيع أونلاين">خدمة بيع أونلاين</option>
+  <option value="تسويق شبكي">تسويق شبكي</option>
+  <option value="موزع منتجات">موزع منتجات</option>
+  <option value="ممثل تجاري">ممثل تجاري</option>
+</optgroup>
+
+    <!-- باقي الأنواع مثل الصيانة، التقنية، التعليم، الخ... -->
+    <!-- ضع هنا باقي خيارات الأنواع من الرد السابق -->
+
+  </select>
+
+  <label for="wilaya">الولاية:</label>
+<select id="wilaya" name="wilaya" required>
+  <option value="">اختر الولاية</option>
+  <option value="all">كل الولايات</option>
+  <option value="01 - أدرار">01 - أدرار</option>
+  <option value="02 - الشلف">02 - الشلف</option>
+  <option value="03 - الأغواط">03 - الأغواط</option>
+  <option value="04 - أم البواقي">04 - أم البواقي</option>
+  <option value="05 - باتنة">05 - باتنة</option>
+  <option value="06 - بجاية">06 - بجاية</option>
+  <option value="07 - بسكرة">07 - بسكرة</option>
+  <option value="08 - بشار">08 - بشار</option>
+  <option value="09 - البليدة">09 - البليدة</option>
+  <option value="10 - البويرة">10 - البويرة</option>
+  <option value="11 - تمنراست">11 - تمنراست</option>
+  <option value="12 - تبسة">12 - تبسة</option>
+  <option value="13 - تلمسان">13 - تلمسان</option>
+  <option value="14 - تيارت">14 - تيارت</option>
+  <option value="15 - تيزي وزو">15 - تيزي وزو</option>
+  <option value="16 - الجزائر">16 - الجزائر</option>
+  <option value="17 - الجلفة">17 - الجلفة</option>
+  <option value="18 - جيجل">18 - جيجل</option>
+  <option value="19 - سطيف">19 - سطيف</option>
+  <option value="20 - سعيدة">20 - سعيدة</option>
+  <option value="21 - سكيكدة">21 - سكيكدة</option>
+  <option value="22 - سيدي بلعباس">22 - سيدي بلعباس</option>
+  <option value="23 - عنابة">23 - عنابة</option>
+  <option value="24 - قالمة">24 - قالمة</option>
+  <option value="25 - قسنطينة">25 - قسنطينة</option>
+  <option value="26 - المدية">26 - المدية</option>
+  <option value="27 - مستغانم">27 - مستغانم</option>
+  <option value="28 - المسيلة">28 - المسيلة</option>
+  <option value="29 - معسكر">29 - معسكر</option>
+  <option value="30 - ورقلة">30 - ورقلة</option>
+  <option value="31 - وهران">31 - وهران</option>
+  <option value="32 - البيض">32 - البيض</option>
+  <option value="33 - إليزي">33 - إليزي</option>
+  <option value="34 - برج بوعريريج">34 - برج بوعريريج</option>
+  <option value="35 - بومرداس">35 - بومرداس</option>
+  <option value="36 - الطارف">36 - الطارف</option>
+  <option value="37 - تندوف">37 - تندوف</option>
+  <option value="38 - تيسمسيلت">38 - تيسمسيلت</option>
+  <option value="39 - الوادي">39 - الوادي</option>
+  <option value="40 - خنشلة">40 - خنشلة</option>
+  <option value="41 - سوق أهراس">41 - سوق أهراس</option>
+  <option value="42 - تيبازة">42 - تيبازة</option>
+  <option value="43 - ميلة">43 - ميلة</option>
+  <option value="44 - عين الدفلى">44 - عين الدفلى</option>
+  <option value="45 - النعامة">45 - النعامة</option>
+  <option value="46 - عين تموشنت">46 - عين تموشنت</option>
+  <option value="47 - غرداية">47 - غرداية</option>
+  <option value="48 - غليزان">48 - غليزان</option>
+  <option value="49 - تميمون">49 - تميمون</option>
+  <option value="50 - برج باجي مختار">50 - برج باجي مختار</option>
+  <option value="51 - أولاد جلال">51 - أولاد جلال</option>
+  <option value="52 - بني عباس">52 - بني عباس</option>
+  <option value="53 - عين صالح">53 - عين صالح</option>
+  <option value="54 - عين قزام">54 - عين قزام</option>
+  <option value="55 - تقرت">55 - تقرت</option>
+  <option value="56 - جانت">56 - جانت</option>
+  <option value="57 - المغير">57 - المغير</option>
+  <option value="58 - إن صالح">58 - إن صالح</option>
+</select>
+  <label for="gender">الجنس:</label>
+<select id="gender" name="gender">
+  <option value="" {% if request.form.get('gender', '') == '' %}selected{% endif %}>الكل</option>
+  <option value="ذكر" {% if request.form.get('gender') == 'ذكر' %}selected{% endif %}>ذكر</option>
+  <option value="أنثى" {% if request.form.get('gender') == 'أنثى' %}selected{% endif %}>أنثى</option>
+</select>
+ 
+  <button type="submit"><i class="fas fa-search"></i> بحث</button>
+</form>
+
+{% if results %}
+  <h2>نتائج البحث:</h2>
+  <div class="results-container">
+    <div class="results-list" tabindex="0" aria-label="قائمة نتائج البحث">
+      {% for user in results %}
+      <div class="worker-card" role="article" aria-labelledby="worker-name-{{ user.id }}">
+        {% if user.image_path %}
+          <img src="{{ user.image_path }}" alt="صورة {{ user.name }}" />
+        {% else %}
+          <img src="/static/default-profile.png" alt="صورة افتراضية" />
+        {% endif %}
+        <div class="worker-name" id="worker-name-{{ user.id }}">
+          <a href="{{ url_for('public_profile', user_id=user.id) }}" aria-label="عرض صفحة العامل {{ user.name }}">{{ user.name }}</a>
+        </div>
+        <div class="worker-service"><i class="fas fa-briefcase"></i> {{ user.service_type }}</div>
+        <div class="worker-wilaya"><i class="fas fa-map-marker-alt"></i> {{ user.wilaya }}</div>
+        
+        <div class="availability {% if user.is_available %}available{% else %}not-available{% endif %}">
+          <i class="fas fa-circle"></i>
+          {% if user.is_available %}
+            متاح الآن
+          {% else %}
+            غير متاح
+          {% endif %}
+        </div>
+        <div class="rating">
+          <strong>متوسط التقييم:</strong> {{ user.average_rating or 'لا يوجد تقييم بعد' }}
+          <i class="fas fa-star"></i> ({{ user.total_ratings }} تقييمات)
+        </div>
+        <div class="actions">
+             {% if user.show_phone %}
+        <a href="tel:{{ user.phone }}" class="btn-call">
+            <i class="fa fa-phone"></i> إتصال
+        </a>
+    {% else %}
+        <button class="btn-call-disabled" disabled title="رقم الهاتف غير متاح">
+            <i class="fa fa-phone-slash"></i> لا يمكن 
+  
+        </button>
+    {% endif %}
+          <a href="{{ url_for('rate') }}?worker_id={{ user.id }}" aria-label="قيم {{ user.name }}">
+            <i class="fas fa-star-half-alt"></i> تقييم
+          </a>
+          <a href="{{ url_for('chat.chat', receiver_id=user.id) }}" aria-label="الدردشة مع {{ user.name }}">
+            <i class="fas fa-comments"></i> مراسلة
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+<div class="back-home">
+  <a href="{{ url_for('home') }}"><i class="fas fa-arrow-right"></i> العودة للصفحة الرئيسية</a>
+</div>
+
+<a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+</a>
+
+</body>
+</html>

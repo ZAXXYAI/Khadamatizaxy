@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>الدردشة مع البوت</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+        
+      
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      
+      background-color: #e9ebee;
+      direction: rtl;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .copy-btn {
+  background-color: #6534;
+  border: none;
+  padding: 0px 0px;
+  cursor: pointer;
+  font-size: 0.5em;
+  border-radius: 0px;
+  transition: background-color 0.2s;
+}
+
+.copy-btn:hover {
+  background-color: #ddd;
+}
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      margin-bottom : 0px;
+      
+    }
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+        padding: 12px;
+        
+      }
+    #chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: #f0f2f5;
+      position: relative;
+    }
+    .message {
+      margin: 8px 4px;
+      padding: 10px 12px;
+      border-radius: 15px;
+      line-height: 1.6;
+      max-width: auto ;
+      word-wrap: break-word;
+      font-size: 0.95rem;
+      user-select: text;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    }
+
+.user {
+  background-color: #4da6ff; /* أزرق ماسنجر */
+  color: #ffffff;
+  align-self: flex-end;
+  text-align: right;
+  border-bottom-right-radius: 0px;
+  margin-left: auto;
+  display: inline-block; /* هذا هو السر */
+  padding: 8px 12px; /* باش يكون عندك مسافة حول النص */
+  border-radius: 12px;
+  max-width: 80%; /* لو تحب تحد من العرض */
+  word-wrap: break-word; /* يخلي الكلام يلتف في السطر الجديد */
+}
+}
+
+.bot {
+  background-color: #e4e6eb; /* رمادي فاتح */
+  color: #050505; /* لون نص غامق */
+  align-self: flex-start;
+  text-align: right;
+  margin-right: auto;
+  border-top-right-radius: 0;
+}
+    .input-container {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background-color: #fff;
+      border-top: 1px solid #ccc;
+    }
+    #user-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 15px;
+      outline: none;
+      resize: none;
+      min-height: 40px;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+    #send-btn {
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      margin-right: 8px;
+      border-radius: 50%;
+      font-size: 18px;
+      display: none;
+      cursor: pointer;
+    }
+    #scroll-btn {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 70px;
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      display: none;
+      z-index: 1000;
+    }
+    .home-button {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: white;
+      padding: 8px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transition: transform 0.2s ease;
+    }
+    .home-button:hover {
+      transform: scale(1.1);
+    }
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">الدردشة مع البوت</div>
+  <a href="{{ url_for('home') }}" class="home-button" aria-label="العودة إلى الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#1877f2" viewBox="0 0 24 24" width="28" height="28">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+  </a>
+
+  <div id="chat-box">
+    <button id="scroll-btn" onclick="scrollToBottom()">⬇ النزول لأسفل</button>
+  </div>
+
+  <div class="input-container">
+    <textarea id="user-input" placeholder="اكتب رسالتك..." oninput="toggleSendButton()"></textarea>
+    <button id="send-btn" onclick="sendMessage()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+  <audio id="receive-sound" src="/static/sounds/notification.mp3" preload="auto"></audio>
+
+  <script>
+    const input = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+    const chatBox = document.getElementById("chat-box");
+    const scrollBtn = document.getElementById("scroll-btn");
+    const copySound = new Audio("/static/sounds/copy.wav");
+    copySound.volume = 1.0;
+    copySound.muted = false;
+    let phone = null; // لـ تخزين رقم الهاتف
+
+    // جلب رقم الهاتف من بيانات المستخدم المسجل
+    async function loadUserPhone() {
+      try {
+        const response = await fetch("/get_user_phone", {
+          method: "GET",
+          credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          alert(data.error);
+          window.location.href = "/login"; // إعادة التوجيه إلى صفحة تسجيل الدخول
+          return;
+        }
+
+        phone = data.phone; // تخزين رقم الهاتف
+        loadMessages(phone); // تحميل المحادثات
+      } catch (error) {
+        console.error("خطأ في جلب رقم الهاتف:", error);
+        alert("حدث خطأ في جلب بيانات المستخدم. يرجى المحاولة مرة أخرى.");
+        window.location.href = "/login"; // إعادة التوجيه إلى صفحة تسجيل الدخول
+      }
+    }
+
+    // تحميل رقم الهاتف والمحادثات عند فتح الصفحة
+    loadUserPhone();
+
+    function toggleSendButton() {
+      sendBtn.style.display = input.value.trim() ? "inline-block" : "none";
+    }
+
+    function scrollToBottom() {
+      chatBox.scrollTop = chatBox.scrollHeight;
+      scrollBtn.style.display = "none";
+    }
+
+    chatBox.addEventListener("scroll", () => {
+      const nearBottom = chatBox.scrollTop + chatBox.clientHeight >= chatBox.scrollHeight - 100;
+      scrollBtn.style.display = nearBottom ? "none" : "block";
+    });
+    function appendMessage(sender, text, className, animated = false, phone) {
+        const div = document.createElement("div");
+        div.className = "message " + className;
+
+  // تنسيق النص: كل فكرة في سطر جديد
+        const formattedText = text.replace(/(?<=\.)\s+/g, "\n");
+
+        const contentSpan = document.createElement("span");
+        div.appendChild(contentSpan);
+        chatBox.appendChild(div);
+
+       const copyBtn = document.createElement("button");
+      copyBtn.className = "copy-btn";
+      copyBtn.style.marginRight = "10px";
+      copyBtn.style.display = "none";
+
+// SVG: أيقونة نسخ
+      const copyIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      copyIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      copyIcon.setAttribute("viewBox", "0 0 24 24");
+      copyIcon.setAttribute("width", "20");
+      copyIcon.setAttribute("height", "20");
+      copyIcon.innerHTML = `<path fill="currentColor" d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>`;
+
+      copyBtn.appendChild(copyIcon);
+
+// SVG: أيقونة تم النسخ
+      const checkIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      checkIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      checkIcon.setAttribute("viewBox", "0 0 24 24");
+      checkIcon.setAttribute("width", "20");
+      checkIcon.setAttribute("height", "20");
+      checkIcon.innerHTML = `<path fill="green" d="M9 16.17L4.83 12 3.41 13.41 9 19l12-12-1.41-1.41z"/>`;
+      checkIcon.style.display = "none";
+
+      copyBtn.appendChild(checkIcon);
+
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(contentSpan.textContent).then(() => {
+          copySound.currentTime = 0;
+          copySound.play().catch(err => console.warn("فشل تشغيل الصوت:", err)); // ← هذا هو المهم
+
+          copyIcon.style.display = "none";
+          checkIcon.style.display = "inline-block";
+      
+          setTimeout(() => {
+            copyIcon.style.display = "inline-block";
+            checkIcon.style.display = "none";
+          }, 1500);
+        });
+      };
+           div.appendChild(copyBtn);
+
+        const shouldScroll =
+          chatBox.scrollTop + chatBox.clientHeight >= chatBox.scrollHeight - 10;
+
+        if (animated) {
+  // نُفعِّل عرض الأسطر قبل الكتابة
+  contentSpan.style.whiteSpace = "pre-line";
+
+  typeEffect(formattedText, contentSpan, 40, () => {
+    saveMessages(phone);
+    copyBtn.style.display = "inline-block";
+    if (shouldScroll) chatBox.scrollTop = chatBox.scrollHeight;
+  });
+} else {
+  contentSpan.innerHTML = formattedText.replace(/\n/g, "<br>");
+  saveMessages(phone);
+  copyBtn.style.display = "inline-block";
+  if (shouldScroll) chatBox.scrollTop = chatBox.scrollHeight;
+}
+        if (className === "bot") playReceiveSound();
+      }
+      function playReceiveSound() {
+  const sound = document.getElementById("receive-sound");
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play().catch(err => console.warn("فشل تشغيل صوت الاستقبال:", err));
+  }
+}
+
+    
+    
+
+    function typeEffect(text, targetElement, delay = 40, callback = null) {
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          targetElement.textContent += text.charAt(i);
+          i++;
+          scrollToBottom();
+          setTimeout(typing, delay);
+        } else if (callback) {
+          callback(); // ← ننفذ الحفظ هنا بعد الانتهاء
+        }
+      }
+      typing();
+    }
+
+    async function sendMessage() {
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendMessage("أنت", message, "user", false, phone);
+      input.value = "";
+      sendBtn.style.display = "none";
+
+      try {
+        const response = await fetch("/chatbot/message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({ message, phone }) // ← إرسال رقم الهاتف مع الرسالة
+        });
+
+        const data = await response.json();
+
+        if (data.response) {
+          appendMessage("البوت", data.response, "bot", true, phone);
+        } else {
+          appendMessage("البوت", "لم يتمكن البوت من الرد.", "bot", false, phone);
+        }
+      } catch (error) {
+        appendMessage("البوت", "حدث خطأ في الاتصال بالخادم.", "bot", false, phone);
+      }
+    }
+
+    // حفظ الرسائل في localStorage باستخدام رقم الهاتف كمفتاح
+    function saveMessages(phone) {
+      const messages = [];
+      chatBox.childNodes.forEach(node => {
+        if (node.classList && node.classList.contains("message")) {
+          messages.push({
+            text: node.textContent,
+            className: node.classList.contains("user") ? "user" : "bot"
+          });
+        }
+      });
+      localStorage.setItem(`chatMessages_${phone}`, JSON.stringify(messages));
+    }
+
+    // تحميل الرسائل باستخدام رقم الهاتف كمفتاح
+    function loadMessages(phone) {
+      const messages = JSON.parse(localStorage.getItem(`chatMessages_${phone}`) || "[]");
+      messages.forEach(msg => {
+        appendMessage("", msg.text, msg.className, false, phone);
+      });
+      scrollToBottom();
+    }
+    
+
+// مثال: بعد إضافة رسالة بوت إلى الصفحة
+function addBotMessage(text) {
+  const container = document.getElementById("chat");
+  const div = document.createElement("div");
+  div.className = "bot message";
+  div.innerHTML = text;
+  container.appendChild(div);
+  playReceiveSound(); // شغل الصوت بعد ظهور الرسالة
+}
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>تسجيل دخول - Zaxxy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+  
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #e9efff, #f9f9f9);
+      
+      direction: rtl;
+    }
+
+    .header {
+      background: linear-gradient(to right, #1877f2, #0d47a1);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .container {
+      padding: 20px 15px;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: 500;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    button {
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 40px;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: background-color 0.3s
+     
+    }
+
+    button:hover {
+      background-color: #0d47a1;
+    }
+
+    .links {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .links a {
+      text-decoration: none;
+      color: #1877f2;
+      font-weight: 500;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .icon-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .flash-message {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+      color: #dc3545;
+      font-weight: bold;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        font-size: 18px;
+        padding: 12px;
+      }
+
+      input, button {
+        font-size: 15px;
+      }
+    }
+    <style>
+  .error-box {
+    background-color: #ffe0e0;
+    color: #b20000;
+    padding: 12px;
+    border: 1px solid #b20000;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+    animation: fadeOut 0.5s ease-out 2.5s forwards;
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+</style>
+  </style>
+</head>
+<body>
+
+  <div class="header">مرحبا بك في خداماتي</div>
+
+  <div class="container">
+    <form id="login-form" action="{{ url_for('login') }}" method="POST">
+  <div class="icon-title">
+    <i class="fas fa-lock"></i> دخول حسابك
+  </div>
+
+  <label for="phone">رقم الهاتف</label>
+  <input type="text" id="phone" name="phone" required>
+
+  <label for="password">كلمة المرور</label>
+  <input type="password" id="password" name="password" required>
+
+  <div id="admin-key-field" style="display: none;">
+    <label for="admin_key">🔒 كلمة سر الأدمن</label>
+    <input type="password" id="admin_key" name="admin_key">
+  </div>
+
+  {% if error %}
+    <div id="error-message" class="error-box">
+      {{ error }}
+    </div>
+  {% endif %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flash-message" id="flash-container">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+
+    <script>
+      // انتظر 2 ثواني ثم أخفِ الرسائل
+      setTimeout(() => {
+        const flashContainer = document.getElementById('flash-container');
+        if (flashContainer) {
+          flashContainer.style.transition = "opacity 0.5s ease-out";
+          flashContainer.style.opacity = "0";
+          setTimeout(() => flashContainer.remove(), 500); // إزالة العنصر بعد اختفاءه
+        }
+      }, 2000);
+    </script>
+  {% endif %}
+{% endwith %}
+
+  <button type="submit" id="submit-btn">دخول</button>
+
+  <div class="links">
+    <p>لا تملك حسابًا؟ <a href="{{ url_for('register') }}">أنشئ حساب جديد</a></p>
+    <p>نسيت كلمة المرور؟ <a href="{{ url_for('forgot_password') }}">استعادة الوصول</a></p>
+    <p><a href="{{ url_for('home') }}">عودة للرئيسية</a></p>
+  </div>
+</form>
+
+
+
+  </div>
+<script>
+  setTimeout(function () {
+    const errorBox = document.getElementById('error-message');
+    if (errorBox) {
+      errorBox.style.display = 'none';
+    }
+  }, 2000);
+</script>
+<script>
+document.getElementById('login-form').addEventListener('submit', function (e) {
+  const phone = document.getElementById('phone').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const adminKeyField = document.getElementById('admin-key-field');
+  const adminKeyInput = document.getElementById('admin_key');
+
+  // إذا لم يتم عرض حقل الأدمن بعد، تحقق أولًا
+  if (adminKeyField.style.display === 'none') {
+    e.preventDefault(); // أوقف إرسال الفورم مؤقتًا
+
+    fetch('/check-admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phone, password: password })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.is_admin) {
+        // عرض حقل الأدمن فقط إذا تطابق الهاتف + كلمة السر + تحقق + إيميل الأدمن
+        adminKeyField.style.display = 'block';
+        adminKeyInput.focus();
+      } else {
+        // إذا ليس أدمن، أرسل الفورم عادي
+        document.getElementById('login-form').submit();
+      }
+    })
+    .catch(err => {
+      alert("⚠️ حدث خطأ أثناء التحقق من صلاحيات الأدمن.");
+    });
+  } else if (adminKeyInput.value.trim() === '') {
+    // إذا تم عرض حقل الأدمن لكن لم يُملأ
+    e.preventDefault();
+    alert("🔐 من فضلك أدخل كلمة سر الأدمن.");
+    adminKeyInput.focus();
+  }
+});
+</script>
+</body>
+</html>

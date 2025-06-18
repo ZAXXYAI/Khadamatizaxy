@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>مشاهدة إعلان</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header {
+      background: linear-gradient(to right, #00b09b, #96c93d);
+      color: white;
+      padding: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .subtext {
+      color: #555;
+      margin: 20px auto 10px;
+      font-size: 16px;
+      padding: 0 15px;
+    }
+
+    .timer {
+      font-size: 18px;
+      color: #007bff;
+      margin-top: 10px;
+    }
+
+    video {
+      width: 90%;
+      max-width: 400px;
+      margin-top: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: none;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    @media (max-width: 480px) {
+      button {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <i class="fas fa-play-circle"></i> مشاهدة إعلان
+</div>
+
+<div class="subtext">
+  🎥 شاهد الإعلان كاملاً لتحصل على ترقية مؤقتة لحسابك!<br>
+  <strong style="color: #e67e22;">الإعلانات الحقيقية قريبًا...</strong>
+</div>
+
+{% if already_upgraded %}
+<div class="timer" id="remainingTime">
+  ⏳ لديك ترقية مؤقتة فعالة. ينتهي بعد <span id="countdown">--:--</span>
+</div>
+{% endif %}
+
+<video id="adVideo" controls preload="auto">
+  <source src="{{ url_for('static', filename='promo.mp4') }}" type="video/mp4">
+  متصفحك لا يدعم تشغيل الفيديو.
+</video>
+
+<form method="POST" action="{{ url_for('watch_ad') }}">
+  <button id="upgradeBtn" type="submit" disabled>
+    <i class="fas fa-check-circle"></i> لقد شاهدت الإعلان
+  </button>
+</form>
+
+<a href="{{ url_for('upgrade_page') }}"
+   style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 40px; margin-top:10px;  font-weight: bold;">
+  ⬅️ العودة
+</a>
+
+<script>
+  const video = document.getElementById('adVideo');
+  const btn = document.getElementById('upgradeBtn');
+
+  let fullyWatched = false;
+  let lastTime = 0;
+
+  // منع القفز في الفيديو
+  video.addEventListener('seeking', function () {
+    if (!fullyWatched && video.currentTime > lastTime + 2) {
+      video.currentTime = lastTime; // يرجع للفريم المسموح
+    }
+  });
+
+  // تحديث آخر نقطة مشاهدة
+  video.addEventListener('timeupdate', function () {
+    if (video.currentTime > lastTime) {
+      lastTime = video.currentTime;
+    }
+  });
+
+  // عند نهاية الفيديو، أظهر الزر
+  video.onended = function () {
+    fullyWatched = true;
+    btn.style.display = 'inline-block';
+    btn.disabled = false;
+  };
+
+  {% if already_upgraded and expires_at %}
+  const countdownEl = document.getElementById("countdown");
+  const endTime = new Date("{{ expires_at }}").getTime();
+
+  const interval = setInterval(function () {
+    const now = new Date().getTime();
+    const distance = endTime - now;
+
+    if (distance <= 0) {
+      countdownEl.innerText = "00:00";
+      clearInterval(interval);
+      return;
+    }
+
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    countdownEl.innerText = String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
+  }, 1000);
+  {% endif %}
+</script>
+
+</body>
+</html>
