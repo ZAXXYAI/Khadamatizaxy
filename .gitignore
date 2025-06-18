@@ -12,6 +12,3 @@ __pycache__/
 *.pyc
 instance/
 flask_session/
-
-utils/ai_search.py
-utils/ai_search.py
