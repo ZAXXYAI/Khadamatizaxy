@@ -1,43 +1,63 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, jsonify, Blueprint
+# -----------------------
+# 📦 الاستيراد
+# -----------------------
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, jsonify, Blueprint, g
+from flask_session import Session
+from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
+from datetime import datetime, timedelta
 import sqlite3
 import smtplib
 from email.message import EmailMessage
-import secrets  # لتوليد الرموز العشوائية
-from flask_session import Session
+import secrets
+import bcrypt
 import os
-from dotenv import load_dotenv
 
-load_dotenv()  # تحميل المتغيرات من .env
-import os
-from werkzeug.utils import secure_filename
+# -----------------------
+# 📁 تحميل المتغيرات من .env
+# -----------------------
+load_dotenv()
+
+# -----------------------
+# ✅ إنشاء قاعدة البيانات إذا لم تكن موجودة
+# -----------------------
+if not os.path.exists('database/db.sqlite'):
+    try:
+        import create_db
+        print("✅ تم إنشاء قاعدة البيانات تلقائيًا.")
+    except Exception as e:
+        print("❌ خطأ أثناء إنشاء القاعدة:", e)
+
+# -----------------------
+# ⚙️ إعداد Flask
+# -----------------------
+app = Flask(__name__)
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+Session(app)
+
+# -----------------------
+# 🧠 استيراد ملفات المشروع الأخرى
+# -----------------------
 from utils.ai_search import send_ai_query, API_KEYS
 from chat import chat_bp
-from flask import g
-app = Flask(__name__)
-from upgrade import add_upgrade_code, delete_upgrade_code, get_all_upgrade_codes, get_upgraded_users, manually_upgrade_user, get_manual_upgraded_users, apply_upgrade
-DB_PATH = 'database/db.sqlite'
-from datetime import datetime, timedelta
-import bcrypt
+from upgrade import (
+    add_upgrade_code, delete_upgrade_code, get_all_upgrade_codes,
+    get_upgraded_users, manually_upgrade_user, get_manual_upgraded_users, apply_upgrade
+)
 from update_availability import update_user_availability
 from upgrade_db import update_all_tables
 
- # حسب مكان الكود أعلاه
+# -----------------------
+# ✅ تسجيل البلوبرنت
+# -----------------------
 app.register_blueprint(chat_bp, url_prefix='/chat')
-from chat import chat_bp  # حسب اسم ملفك
 
-chat_api = Blueprint('chat_api', __name__)
-# إعداد نظام الجلسات
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')# مفتاح الجلسة
-Session(app)
-
-
-
-
-DATABASE = 'database/db.sqlite'
-from flask import Flask, flash, redirect, url_for
-from update_availability import update_user_availability
-
+# -----------------------
+# 📁 إعداد المسار لقاعدة البيانات
+# -----------------------
+DB_PATH = 'database/db.sqlite'
+DATABASE = DB_PATH
 
 @app.route('/admin/update-availability')
 def trigger_update():
