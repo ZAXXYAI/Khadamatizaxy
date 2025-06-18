@@ -3,3 +3,5 @@ Flask-Session==0.8.0
 requests==2.32.3
 Werkzeug==3.1.3
 gunicorn
+python-dotenv
+
