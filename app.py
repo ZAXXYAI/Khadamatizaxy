@@ -139,7 +139,7 @@ def chatbot_message():
 # وظيفة لإرسال البريد الإلكتروني
 from flask import flash
 
-def send_email(email, subject, content):
+def send_email(email, subject, content, html=False):
     from email.message import EmailMessage
     import smtplib
 
@@ -147,7 +147,14 @@ def send_email(email, subject, content):
     msg['Subject'] = subject
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = email
-    msg.set_content(content)
+
+    if html:
+        # HTML content
+        msg.set_content("يرجى استخدام بريد يدعم HTML لرؤية المحتوى.")
+        msg.add_alternative(content, subtype='html')
+    else:
+        # Plain text
+        msg.set_content(content)
 
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
@@ -156,7 +163,6 @@ def send_email(email, subject, content):
         return True
     except Exception:
         return False
-
 # الصفحة الرئيسية
 @app.route('/')
 def home():
@@ -451,8 +457,15 @@ def forgot_password():
             conn.commit()
             conn.close()
 
-            reset_link = f"http://127.0.0.1:5001/reset_password?token={reset_token}"
-            send_email(email, 'إعادة تعيين كلمة المرور', f'الرابط لإعادة تعيين كلمة المرور: {reset_link}')
+            reset_link = f"https://khadamatizaxy.onrender.com/reset_password?token={reset_token}"
+
+            # محتوى الإيميل بـ HTML
+            html_content = f"""
+            <p>🔑 لإعادة تعيين كلمة المرور، <a href="{reset_link}">اضغط هنا</a>.</p>
+            <p>إذا لم تطلب هذا، تجاهل هذه الرسالة.</p>
+            """
+
+            send_email(email, 'إعادة تعيين كلمة المرور', html_content, html=True)
             success_message = "📧 تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني."
             return render_template('forgot_password.html', success=success_message)
         else:
@@ -461,7 +474,6 @@ def forgot_password():
             return render_template('forgot_password.html', error=error_message)
 
     return render_template('forgot_password.html')
-
 
 @app.route('/user/<int:user_id>')
 def public_profile(user_id):
