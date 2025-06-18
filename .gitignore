@@ -5,7 +5,7 @@ app.py
 .env
 
 # إخفاء قاعدة البيانات داخل مجلد database
-database/db.sqlite
+
 
 # إخفاء مجلدات التكوين المؤقت
 __pycache__/
