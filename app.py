@@ -1064,13 +1064,13 @@ def friends():
 
         # جلب قائمة الأصدقاء مع بيانات إضافية
         cursor.execute('''
-        SELECT users.id, users.name, users.phone, users.service_type, users.image_path
+        SELECT users.id, users.name, users.phone, users.service_type, users.image_path, show_phone
         FROM friends
         JOIN users ON friends.friend_id = users.id
         WHERE friends.user_id = ?
         ''', (user_id,))
         friends = cursor.fetchall()
-
+        show_phone = 1 if request.form.get('show_phone') == 'on' else 0  # ✅ السطر المضاف
         conn.close()
         return render_template('friends.html', friends=friends)
     except sqlite3.Error as e:
