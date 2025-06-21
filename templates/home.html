@@ -305,12 +305,13 @@
       <a href="{{ url_for('upgrade_status') }}" class="card-link">
         <span><i class="fas fa-star" style="color:#ffc107;"></i> حالة الترقية</span>
       </a>
-
+{% if session.get('role') in ['admin'] %}
       <a href="{{ url_for('chatbot_page') }}" class="card-link">
         <span>
           <i class="fas fa-robot" style="color:#0dcaf0;"></i> التحدث مع البوت
         </span>
       </a>
+          {% endif %}
 
       <a href="{{ url_for('friends') }}" class="card-link">
         <span><i class="fas fa-users"></i> الأصدقاء</span>

@@ -1980,11 +1980,13 @@ from flask import request, redirect, url_for, flash
 from datetime import datetime
 import sqlite3
 
+from datetime import datetime
+
 @app.route('/admin/accept_upgrade', methods=['POST'])
 def accept_upgrade():
     identifier = request.form['identifier']
     duration_type = request.form.get('duration_type')
-    
+
     # تحديد عدد الأيام حسب الاختيار
     if duration_type == 'month':
         days = 30
@@ -2005,26 +2007,39 @@ def accept_upgrade():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # تأكد من أن المستخدم موجود
-    cursor.execute("SELECT id FROM users WHERE email = ? OR phone = ?", (identifier, identifier))
+    # التحقق من وجود المستخدم وجلب حالة الترقية فقط
+    cursor.execute('''
+        SELECT id, is_upgraded 
+        FROM users 
+        WHERE email = ? OR phone = ?
+    ''', (identifier, identifier))
     user = cursor.fetchone()
+
     if not user:
         conn.close()
         flash("❌ المستخدم غير موجود", "error")
         return redirect(url_for('admin_upgrade_requests'))
 
+    user_id, is_upgraded = user
+
+    # التحقق من حالة الترقية
+    if is_upgraded == 1:
+        conn.close()
+        flash("⚠️ المستخدم لديه ترقية نشطة حالياً. الطلب سيبقى معلقًا.", "warning")
+        return redirect(url_for('admin_upgrade_requests'))
+
+    # تنفيذ الترقية
     upgrade_date = datetime.now().strftime('%Y-%m-%d')
 
-    # تحديث حالة المستخدم
     cursor.execute('''
         UPDATE users
         SET is_upgraded = 1,
             upgrade_date = ?,
             upgrade_duration_days = ?
-        WHERE email = ? OR phone = ?
-    ''', (upgrade_date, days, identifier, identifier))
+        WHERE id = ?
+    ''', (upgrade_date, days, user_id))
 
-    # حذف من جدول pending_payments بعد القبول
+    # حذف الطلب بعد الترقية فقط
     cursor.execute("DELETE FROM pending_payments WHERE identifier = ?", (identifier,))
 
     conn.commit()
@@ -2032,7 +2047,6 @@ def accept_upgrade():
 
     flash("✅ تم قبول الترقية", "success")
     return redirect(url_for('admin_upgrade_requests'))
-
 
 # --------------------------------------
 # صفحة إرسال معلومات الدفع عبر Baridimob

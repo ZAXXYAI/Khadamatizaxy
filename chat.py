@@ -17,6 +17,14 @@ def get_user_id_by_session():
 
 # استرجاع اسم المستخدم وصورته من ID
 def get_user_name(user_id):
+    # إذا كان البوت
+    if user_id == 0:
+        return {
+            'name': 'البوت',
+            'profile_picture': 'bot.ico'
+        }
+
+    # المستخدم الحقيقي
     conn = sqlite3.connect('database/db.sqlite')
     cursor = conn.cursor()
     cursor.execute('SELECT name, image_path FROM users WHERE id = ?', (user_id,))
@@ -31,11 +39,9 @@ def get_user_name(user_id):
         }
     else:
         return {
-            'name': 'البوت',
-            'profile_picture': 'bot.ico'
+            'name': 'غير معروف',
+            'profile_picture': 'default.jpg'
         }
-
-
 
 
 

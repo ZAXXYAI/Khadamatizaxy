@@ -2,19 +2,37 @@
 import requests
 import random
 import sqlite3
-import os
-
-# تحميل المتغيرات من .env لما تكون محلياً (اختياري)
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass  # تخطي إذا ماكانش dotenv موجود، مثلاً في Render
 
 
 
 
-API_KEYS = os.getenv("API_KEYS", "").split(",")
+API_KEYS = [
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    # ... up to 20
+]
+# جلب بيانات المستخدم
+
 
 def get_user_data(user_id):
     """
