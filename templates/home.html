@@ -448,11 +448,22 @@
   }, 3000);
   <!-- ✅ سكربت إخفاء الشريط بعد تحميل الصفحة -->
 
+
   window.addEventListener('load', function () {
-  setTimeout(function () {
-    document.getElementById('preloader').style.display = 'none';
-  }, 100); // نصف ثانية
-});
+    // تحقق إذا تم عرض الـ Preloader من قبل
+    if (!sessionStorage.getItem('preloaderShown')) {
+      // نعرضه مرة وحدة
+      setTimeout(function () {
+        document.getElementById('preloader').style.display = 'none';
+        // نعلّم المتصفح أنو عرضناه
+        sessionStorage.setItem('preloaderShown', 'true');
+      }, 600); // نصف ثانية أو المدة لي تحبها
+    } else {
+      // نخفيه مباشرة لأنو سبق تعرض
+      document.getElementById('preloader').style.display = 'none';
+    }
+  });
+
 </script>
 </body>
 </html>
